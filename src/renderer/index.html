@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Pre-Accounting Agent v2.0.0</title>
+  <style>
+    /* Basic reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #202124;
+      background-color: #f1f3f4;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* App layout */
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .main-content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .page-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    /* Header styles */
+    .app-header {
+      height: 60px;
+      background-color: #1a73e8;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    }
+
+    .app-header .branding {
+      display: flex;
+      align-items: center;
+    }
+
+    .app-header .company-name {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-right: 10px;
+    }
+
+    .app-header .app-title {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Sidebar styles */
+    .sidebar {
+      width: 240px;
+      background-color: white;
+      border-right: 1px solid #dadce0;
+      overflow-y: auto;
+    }
+
+    .nav-list {
+      list-style: none;
+    }
+
+    .nav-item {
+      margin: 4px 8px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      text-decoration: none;
+      color: #202124;
+      border-radius: 8px;
+      transition: background-color 0.2s ease;
+    }
+
+    .nav-link:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-link.active {
+      background-color: rgba(26, 115, 232, 0.1);
+      color: #1a73e8;
+      font-weight: 500;
+    }
+
+    .nav-icon {
+      margin-right: 12px;
+      font-size: 1.2rem;
+    }
+
+    /* Footer styles */
+    .app-footer {
+      height: 40px;
+      background-color: white;
+      border-top: 1px solid #dadce0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: #5f6368;
+    }
+
+    /* Common components */
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 15px;
+      color: #0d47a1;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    /* Dashboard specific styles */
+    .stats-card {
+      text-align: center;
+      padding: 24px;
+    }
+
+    .stats-value {
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 10px 0;
+      color: #1a73e8;
+    }
+
+    .stats-label {
+      font-size: 0.9rem;
+      color: #5f6368;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #5f6368;
+      margin-bottom: 20px;
+    }
+
+    .cta-container {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    /* Button styles */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      border: none;
+      outline: none;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background-color: #1a73e8;
+      color: white;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid #1a73e8;
+      color: #1a73e8;
+    }
+
+    .btn-primary:hover {
+      background-color: #0d47a1;
+    }
+
+    .btn-outline:hover {
+      background-color: rgba(26, 115, 232, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', () => {
+      // Get DOM references
+      const rootElement = document.getElementById('root');
+
+      try {
+        // Get app version
+        const versionInfo = window.electronAPI.getAppVersion();
+        const version = versionInfo?.version || '2.0.0-beta';
+        
+        // Create main application container
+        rootElement.innerHTML = `
+          <div class="app-container">
+            <header class="app-header">
+              <div class="branding">
+                <div class="company-name">Financial Pre-Accounting Agent</div>
+                <div class="app-title">v${version}</div>
+              </div>
+              
+              <div class="app-info">
+                <div>Morocco Finance Law 2025 Compliant</div>
+              </div>
+            </header>
+            
+            <div class="main-content">
+              <aside class="sidebar">
+                <nav class="sidebar-nav">
+                  <ul class="nav-list">
+                    <li class="nav-item">
+                      <a href="#dashboard" class="nav-link active">
+                        <span class="nav-icon">📊</span>
+                        <span>Dashboard</span>
+                      </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                      <a href="#documents" class="nav-link">
+                        <span class="nav-icon">📁</span>
+                        <span>Document Manager</span>
+                      </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                      <a href="#tax-calculator" class="nav-link">
+                        <span class="nav-icon">🧮</span>
+                        <span>Tax Calculator</span>
+                      </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                      <a href="#reports" class="nav-link">
+                        <span class="nav-icon">📋</span>
+                        <span>Reports</span>
+                      </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                      <a href="#settings" class="nav-link">
+                        <span class="nav-icon">⚙️</span>
+                        <span>Settings</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </aside>
+              
+              <div class="page-content">
+                <div id="dashboard-page" class="active-page">
+                  <h1>Dashboard</h1>
+                  <p class="subtitle">Welcome to your Financial Pre-Accounting Dashboard</p>
+                  
+                  <div class="grid">
+                    <div class="card stats-card">
+                      <div class="stats-value">0</div>
+                      <div class="stats-label">Incoming Documents</div>
+                    </div>
+                    
+                    <div class="card stats-card">
+                      <div class="stats-value">0</div>
+                      <div class="stats-label">Outgoing Documents</div>
+                    </div>
+                    
+                    <div class="card stats-card">
+                      <div class="stats-value">0</div>
+                      <div class="stats-label">Tax Calculations</div>
+                    </div>
+                  </div>
+                  
+                  <div class="card">
+                    <h2 class="card-title">Finance Law 2025 Updates</h2>
+                    <p>The Financial Pre-Accounting Agent now includes comprehensive support for Morocco's Finance Law 2025 tax calculations.</p>
+                    
+                    <div>
+                      <h3>Key Tax Features in Version 2.0:</h3>
+                      <ul>
+                        <li>PDF report generation with professional formatting</li>
+                        <li>Detailed tax bracket breakdowns</li>
+                        <li>Minimum contribution calculations</li>
+                        <li>Enhanced document management</li>
+                      </ul>
+                    </div>
+                    
+                    <div class="cta-container">
+                      <button class="btn btn-primary" id="calculate-tax-btn">
+                        Calculate Taxes
+                      </button>
+                      
+                      <button class="btn btn-outline" id="manage-docs-btn">
+                        Manage Documents
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="app-footer">
+              <p>Financial Pre-Accounting Agent v${version} | Based on Finance Law 2025 (Law No. 60-24)</p>
+            </div>
+          </div>
+        `;
+
+        // Add simple event listeners for navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            // In a real app, we would show the appropriate page here
+            console.log(`Navigating to: ${link.getAttribute('href')}`);
+          });
+        });
+
+        // Add event listeners for buttons
+        document.getElementById('calculate-tax-btn')?.addEventListener('click', () => {
+          document.querySelector('a[href="#tax-calculator"]').click();
+        });
+
+        document.getElementById('manage-docs-btn')?.addEventListener('click', () => {
+          document.querySelector('a[href="#documents"]').click();
+        });
+      } catch (error) {
+        console.error('Error initializing application:', error);
+        rootElement.innerHTML = `
+          <div style="padding: 20px; text-align: center;">
+            <h1>Error Loading Application</h1>
+            <p>${error.message}</p>
+          </div>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>

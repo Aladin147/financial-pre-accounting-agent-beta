@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Financial Pre-Accounting Agent v2.0.0</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      background-color: #1a73e8;
+      color: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .version {
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      padding: 20px;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      background-color: white;
+    }
+    .feature-card h3 {
+      margin-top: 0;
+      color: #1a73e8;
+    }
+    .feature-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    button {
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    button:hover {
+      background-color: #1557b0;
+    }
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      font-size: 14px;
+      border-top: 1px solid #eee;
+      margin-top: 40px;
+    }
+    #log-area {
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      margin-top: 20px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: monospace;
+    }
+    .log-entry {
+      margin-bottom: 5px;
+      padding: 5px;
+      border-bottom: 1px solid #eee;
+    }
+    .success { color: green; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Financial Pre-Accounting Agent</h1>
+    <div class="version">Version 2.0.0-beta</div>
+  </div>
+  
+  <div class="container">
+    <div class="card">
+      <h2>Pre-Accounting Manager for Moroccan Companies</h2>
+      <p>Enhanced with Finance Law 2025 (Law No. 60-24) compliance</p>
+      
+      <div id="app-info"></div>
+      
+      <div id="app-controls">
+        <button id="get-app-info">Show App Info</button>
+        <button id="view-logs">View Logs</button>
+      </div>
+    </div>
+    
+    <h2>New in Version 2.0.0-beta</h2>
+    
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">📄</div>
+        <h3>PDF Report Generation</h3>
+        <p>Professional PDF reports with company branding. Detailed financial summaries and tax calculations.</p>
+        <button id="generate-report">Generate Sample Report</button>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">🧮</div>
+        <h3>Finance Law 2025 Tax Engine</h3>
+        <p>Complete implementation of progressive tax rates, minimum contribution calculation, and social solidarity contribution.</p>
+        <button id="run-tax-calculation">Run Tax Calculation</button>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <h3>Document Organization</h3>
+        <p>Enhanced document metadata tracking and improved organization for accounting handover.</p>
+        <button id="document-info">View Document Info</button>
+      </div>
+    </div>
+    
+    <div id="log-area">
+      <div class="log-entry">Application loaded successfully</div>
+    </div>
+  </div>
+  
+  <div class="footer">
+    Financial Pre-Accounting Agent v2.0.0-beta | Based on Finance Law 2025 (Law No. 60-24)
+  </div>
+
+  <script>
+    // Log function to add entries to the log area
+    function log(message, type = 'info') {
+      const logArea = document.getElementById('log-area');
+      const entry = document.createElement('div');
+      entry.classList.add('log-entry');
+      
+      if (type === 'success') entry.classList.add('success');
+      if (type === 'error') entry.classList.add('error');
+      
+      entry.textContent = message;
+      logArea.appendChild(entry);
+      logArea.scrollTop = logArea.scrollHeight;
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      // Try to check if electronAPI is available
+      try {
+        if (window.electronAPI) {
+          log('ElectronAPI detected - running in Electron', 'success');
+        } else {
+          log('ElectronAPI not found - running in browser mode', 'error');
+        }
+      } catch (e) {
+        log(`Error during initialization: ${e.message}`, 'error');
+      }
+      
+      // Set up event listeners
+      document.getElementById('get-app-info').addEventListener('click', () => {
+        try {
+          if (window.electronAPI) {
+            const versionInfo = window.electronAPI.getAppVersion();
+            const appInfo = document.getElementById('app-info');
+            appInfo.innerHTML = `
+              <div style="margin: 20px 0; padding: 10px; background-color: #f5f5f5; border-left: 4px solid #1a73e8;">
+                <p><strong>Application Name:</strong> ${versionInfo.name}</p>
+                <p><strong>Version:</strong> ${versionInfo.version}</p>
+                <p><strong>Tax Rule Version:</strong> Finance Law 2025 (Law No. 60-24)</p>
+              </div>
+            `;
+            log('Retrieved application information', 'success');
+          } else {
+            log('Cannot get app info - ElectronAPI not available', 'error');
+          }
+        } catch (e) {
+          log(`Error getting app info: ${e.message}`, 'error');
+        }
+      });
+      
+      document.getElementById('view-logs').addEventListener('click', () => {
+        try {
+          if (window.electronAPI) {
+            window.electronAPI.viewLogs();
+            log('Log viewer launched', 'success');
+          } else {
+            log('Cannot view logs - ElectronAPI not available', 'error');
+          }
+        } catch (e) {
+          log(`Error viewing logs: ${e.message}`, 'error');
+        }
+      });
+      
+      document.getElementById('run-tax-calculation').addEventListener('click', () => {
+        try {
+          if (window.electronAPI) {
+            const taxData = {
+              revenue: 1500000,
+              expenses: 800000,
+              otherDeductions: 50000
+            };
+            
+            window.electronAPI.calculateTax(taxData)
+              .then(result => {
+                if (result.error) {
+                  log(`Tax calculation error: ${result.error}`, 'error');
+                  return;
+                }
+                
+                const appInfo = document.getElementById('app-info');
+                appInfo.innerHTML = `
+                  <div style="margin: 20px 0; padding: 10px; background-color: #f5f5f5; border-left: 4px solid #1a73e8;">
+                    <h3>Tax Calculation Results</h3>
+                    <p><strong>Revenue:</strong> ${result.revenue.toLocaleString()} MAD</p>
+                    <p><strong>Expenses:</strong> ${result.expenses.toLocaleString()} MAD</p>
+                    <p><strong>Taxable Income:</strong> ${result.taxableIncome.toLocaleString()} MAD</p>
+                    <p><strong>Calculated Tax:</strong> ${result.calculatedTax.toLocaleString()} MAD</p>
+                    <p><strong>Minimum Contribution:</strong> ${result.minimumContribution.toLocaleString()} MAD</p>
+                    <p><strong>Final Tax:</strong> ${result.finalTax.toLocaleString()} MAD</p>
+                    <p><strong>Effective Tax Rate:</strong> ${result.effectiveTaxRate.toFixed(2)}%</p>
+                  </div>
+                `;
+                
+                log('Tax calculation completed successfully', 'success');
+              })
+              .catch(err => {
+                log(`Tax calculation failed: ${err.message}`, 'error');
+              });
+          } else {
+            log('Cannot run tax calculation - ElectronAPI not available', 'error');
+          }
+        } catch (e) {
+          log(`Error with tax calculation: ${e.message}`, 'error');
+        }
+      });
+      
+      document.getElementById('generate-report').addEventListener('click', () => {
+        try {
+          if (window.electronAPI) {
+            const reportOptions = {
+              reportType: 'financial-summary',
+              name: 'Sample Financial Summary',
+              startDate: '2025-01-01',
+              endDate: '2025-03-31'
+            };
+            
+            window.electronAPI.generateReport(reportOptions)
+              .then(result => {
+                if (!result.success) {
+                  log(`Report generation error: ${result.error}`, 'error');
+                  return;
+                }
+                
+                const appInfo = document.getElementById('app-info');
+                appInfo.innerHTML = `
+                  <div style="margin: 20px 0; padding: 10px; background-color: #f5f5f5; border-left: 4px solid #1a73e8;">
+                    <h3>Report Generated Successfully</h3>
+                    <p><strong>Report Type:</strong> Financial Summary</p>
+                    <p><strong>File:</strong> ${result.path}</p>
+                    <p><strong>Period:</strong> Q1 2025</p>
+                  </div>
+                `;
+                
+                log('PDF report generated successfully', 'success');
+              })
+              .catch(err => {
+                log(`Report generation failed: ${err.message}`, 'error');
+              });
+          } else {
+            log('Cannot generate report - ElectronAPI not available', 'error');
+          }
+        } catch (e) {
+          log(`Error generating report: ${e.message}`, 'error');
+        }
+      });
+      
+      document.getElementById('document-info').addEventListener('click', () => {
+        try {
+          if (window.electronAPI) {
+            Promise.all([
+              window.electronAPI.listDocuments('incoming'),
+              window.electronAPI.listDocuments('outgoing'),
+              window.electronAPI.getDocumentPaths()
+            ]).then(([incomingDocs, outgoingDocs, paths]) => {
+              const appInfo = document.getElementById('app-info');
+              appInfo.innerHTML = `
+                <div style="margin: 20px 0; padding: 10px; background-color: #f5f5f5; border-left: 4px solid #1a73e8;">
+                  <h3>Document Information</h3>
+                  <p><strong>Total Incoming Documents:</strong> ${incomingDocs.length}</p>
+                  <p><strong>Total Outgoing Documents:</strong> ${outgoingDocs.length}</p>
+                  <p><strong>Main Documents Path:</strong> ${paths.main}</p>
+                  <p><strong>Incoming Documents Path:</strong> ${paths.incoming}</p>
+                  <p><strong>Outgoing Documents Path:</strong> ${paths.outgoing}</p>
+                </div>
+              `;
+              
+              log('Document information retrieved successfully', 'success');
+            }).catch(err => {
+              log(`Failed to get document info: ${err.message}`, 'error');
+            });
+          } else {
+            log('Cannot get document info - ElectronAPI not available', 'error');
+          }
+        } catch (e) {
+          log(`Error retrieving document info: ${e.message}`, 'error');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

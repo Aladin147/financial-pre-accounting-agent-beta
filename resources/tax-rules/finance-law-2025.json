@@ -1,0 +1,149 @@
+{
+  "version": "1.0.0",
+  "description": "Morocco Finance Law 2025 (Law No. 60-24) tax rates and rules",
+  "effectiveDate": "2025-01-01",
+  "corporateIncomeTax": {
+    "progressiveBrackets": [
+      {
+        "threshold": 300000,
+        "rate": 0.175,
+        "description": "Up to 300,000 MAD"
+      },
+      {
+        "threshold": 1000000,
+        "rate": 0.20,
+        "description": "300,001 MAD to 1,000,000 MAD"
+      },
+      {
+        "threshold": 100000000,
+        "rate": 0.2275,
+        "description": "1,000,001 MAD to 100,000,000 MAD"
+      },
+      {
+        "threshold": null,
+        "rate": 0.34,
+        "description": "Above 100,000,000 MAD"
+      }
+    ],
+    "minimumContribution": {
+      "rate": 0.0025,
+      "description": "Minimum contribution of 0.25% of turnover"
+    },
+    "deductions": {
+      "businessExpenses": {
+        "rate": 1.0,
+        "description": "Fully deductible business expenses"
+      },
+      "donations": {
+        "rate": 0.10,
+        "maxAmount": 10000,
+        "description": "Donations to recognized charities up to 10% of taxable income or 10,000 MAD"
+      }
+    }
+  },
+  "valueAddedTax": {
+    "standardRate": 0.20,
+    "reducedRates": [
+      {
+        "rate": 0.10,
+        "description": "Essential food items, pharmaceuticals"
+      },
+      {
+        "rate": 0.07,
+        "description": "Utilities, banking services, transportation"
+      }
+    ],
+    "exemptions": [
+      "Basic food products",
+      "Medical services",
+      "Education services",
+      "Exports"
+    ]
+  },
+  "socialContributions": {
+    "socialSolidarityContribution": {
+      "thresholds": [
+        {
+          "minimum": 4000000,
+          "maximum": 10000000,
+          "rate": 0.015,
+          "description": "1.5% for companies with net profit between 4 million and 10 million MAD"
+        },
+        {
+          "minimum": 10000001,
+          "maximum": 40000000,
+          "rate": 0.025,
+          "description": "2.5% for companies with net profit between 10 million and 40 million MAD"
+        },
+        {
+          "minimum": 40000001,
+          "maximum": null,
+          "rate": 0.035,
+          "description": "3.5% for companies with net profit above 40 million MAD"
+        }
+      ]
+    },
+    "professionalTrainingTax": {
+      "rate": 0.018,
+      "description": "1.8% of gross payroll"
+    }
+  },
+  "deadlines": {
+    "annualReturn": {
+      "date": "03-31",
+      "description": "Annual corporate tax return filing deadline"
+    },
+    "quarterlyPayments": [
+      {
+        "date": "03-31",
+        "description": "First quarter payment"
+      },
+      {
+        "date": "06-30",
+        "description": "Second quarter payment"
+      },
+      {
+        "date": "09-30",
+        "description": "Third quarter payment"
+      },
+      {
+        "date": "12-31",
+        "description": "Fourth quarter payment"
+      }
+    ],
+    "vatFiling": {
+      "monthly": {
+        "daysAfterMonthEnd": 20,
+        "description": "For companies with annual turnover exceeding 1 million MAD"
+      },
+      "quarterly": {
+        "daysAfterQuarterEnd": 20,
+        "description": "For companies with annual turnover below 1 million MAD"
+      }
+    }
+  },
+  "specialProvisions": {
+    "exportCompanies": {
+      "taxReduction": {
+        "rate": 0.175,
+        "description": "Uniform rate of 17.5% for export companies"
+      }
+    },
+    "newBusinesses": {
+      "taxExemption": {
+        "period": 5,
+        "description": "Total exemption for first 5 years for qualified new businesses"
+      }
+    },
+    "agricultureTaxation": {
+      "smallFarmers": {
+        "thresholdTurnover": 5000000,
+        "description": "Small farmers with turnover below 5 million MAD are exempt from income tax"
+      },
+      "largeFarmers": {
+        "rate": 0.175,
+        "description": "Uniform rate of 17.5% for large agricultural operations"
+      }
+    }
+  }
+}
