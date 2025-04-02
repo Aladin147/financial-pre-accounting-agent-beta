@@ -5,6 +5,17 @@ All notable changes to the Financial Pre-Accounting Manager will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0-beta] - 2025-04-02
+
+### Added
+- Enhanced Document Manager with powerful document organization features
+- Advanced drag-and-drop document uploader with multi-file support
+- Batch document upload with progress tracking and detailed results
+- Document processor interface for OCR and data extraction
+- Multi-document selection for batch processing operations
+- Interactive processing interface with progress tracking
+- Confidence score visualization for processed documents
+
 ## [3.1.2] - 2025-04-01
 
 ### Added
@@ -135,6 +146,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Basic logging and error handling system
 - Minimal UI with core features
 
+[3.2.0-beta]: https://github.com/username/financial-pre-accounting-agent-beta/compare/v3.1.2...v3.2.0-beta
 [3.1.2]: https://github.com/username/financial-pre-accounting-agent-beta/compare/v3.1.0-beta...v3.1.2
 [3.1.0-beta]: https://github.com/username/financial-pre-accounting-agent-beta/compare/v3.0.0-beta...v3.1.0-beta
 [3.0.0-beta]: https://github.com/username/financial-pre-accounting-agent-beta/compare/v3.0.0-alpha.1...v3.0.0-beta

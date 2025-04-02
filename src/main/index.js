@@ -125,48 +125,54 @@ ipcMain.handle('get-document-paths', () => {
   };
 });
 
-// Handler to import a file into the documents directory
+// Handler to import a file into the documents directory via file dialog
 ipcMain.handle('import-document', async (event, targetDir) => {
   logger.info('import-document IPC handler called', { targetDir });
   
   try {
     const result = await dialog.showOpenDialog({
-      properties: ['openFile'],
+      properties: ['openFile', 'multiSelections'],
       filters: [
-        { name: 'Documents', extensions: ['pdf', 'jpg', 'jpeg', 'png', 'xls', 'xlsx', 'csv'] },
+        { name: 'Documents', extensions: ['pdf', 'jpg', 'jpeg', 'png', 'xls', 'xlsx', 'doc', 'docx', 'csv'] },
       ],
     });
 
     if (!result.canceled && result.filePaths.length > 0) {
-      const sourcePath = result.filePaths[0];
-      const targetPath = path.join(
-        targetDir === 'incoming' ? incomingInvoicesPath : 
-        targetDir === 'outgoing' ? outgoingInvoicesPath : 
-        documentsPath,
-        path.basename(sourcePath)
-      );
-      
-      // Copy the file to the appropriate directory
-      fs.copyFileSync(sourcePath, targetPath);
-      logger.info('Document imported successfully', { 
-        source: sourcePath, 
-        target: targetPath,
-        type: targetDir
-      });
-      
-      // Add document to database
-      const isIncoming = targetDir === 'incoming';
-      const filename = path.basename(sourcePath);
-      
-      documentOps.addDocument({
-        filename,
-        filePath: targetPath,
-        documentType: path.extname(sourcePath).substring(1),
-        isIncoming,
-        documentDate: new Date().toISOString()
-      });
-      
-      return { success: true, path: targetPath };
+      // For backward compatibility, if only one file is selected, process it directly
+      if (result.filePaths.length === 1) {
+        const sourcePath = result.filePaths[0];
+        const targetPath = path.join(
+          targetDir === 'incoming' ? incomingInvoicesPath : 
+          targetDir === 'outgoing' ? outgoingInvoicesPath : 
+          documentsPath,
+          path.basename(sourcePath)
+        );
+        
+        // Copy the file to the appropriate directory
+        fs.copyFileSync(sourcePath, targetPath);
+        logger.info('Document imported successfully', { 
+          source: sourcePath, 
+          target: targetPath,
+          type: targetDir
+        });
+        
+        // Add document to database
+        const isIncoming = targetDir === 'incoming';
+        const filename = path.basename(sourcePath);
+        
+        documentOps.addDocument({
+          filename,
+          filePath: targetPath,
+          documentType: path.extname(sourcePath).substring(1),
+          isIncoming,
+          documentDate: new Date().toISOString()
+        });
+        
+        return { success: true, path: targetPath };
+      } else {
+        // If multiple files are selected, use the upload-files handler with the selected paths
+        return await handleUploadFiles(event, result.filePaths, targetDir);
+      }
     }
     logger.info('Document import cancelled by user');
     return { success: false, message: 'File selection cancelled' };
@@ -175,6 +181,131 @@ ipcMain.handle('import-document', async (event, targetDir) => {
     return { success: false, message: error.message };
   }
 });
+
+// Handler for uploading multiple files
+ipcMain.handle('upload-files', async (event, filePaths, targetDir, progressChannel) => {
+  return await handleUploadFiles(event, filePaths, targetDir, progressChannel);
+});
+
+// Helper function to handle file uploads
+async function handleUploadFiles(event, filePaths, targetDir, progressChannel) {
+  logger.info('Handling upload of multiple files', { 
+    fileCount: filePaths.length, 
+    targetDir 
+  });
+  
+  try {
+    const results = {
+      success: true,
+      totalFiles: filePaths.length,
+      successfulFiles: 0,
+      failedFiles: 0,
+      processedFiles: [],
+      errors: []
+    };
+    
+    // Set target directory
+    const targetDirPath = 
+      targetDir === 'incoming' ? incomingInvoicesPath : 
+      targetDir === 'outgoing' ? outgoingInvoicesPath : 
+      documentsPath;
+    
+    // Process each file
+    for (let i = 0; i < filePaths.length; i++) {
+      const sourcePath = filePaths[i];
+      const filename = path.basename(sourcePath);
+      const targetPath = path.join(targetDirPath, filename);
+      
+      try {
+        // Send progress update
+        if (progressChannel) {
+          event.sender.send(progressChannel, {
+            filename,
+            percent: Math.round((i / filePaths.length) * 100),
+            current: i + 1,
+            total: filePaths.length
+          });
+        }
+        
+        // Copy the file to the target directory
+        fs.copyFileSync(sourcePath, targetPath);
+        
+        // Add to database
+        const isIncoming = targetDir === 'incoming';
+        const documentType = path.extname(sourcePath).substring(1).toLowerCase();
+        
+        const docId = documentOps.addDocument({
+          filename,
+          filePath: targetPath,
+          documentType,
+          isIncoming,
+          documentDate: new Date().toISOString()
+        });
+        
+        // Add to results
+        results.successfulFiles++;
+        results.processedFiles.push({
+          id: docId,
+          filename,
+          path: targetPath,
+          documentType,
+          isIncoming
+        });
+        
+        logger.info('File uploaded successfully', {
+          source: sourcePath,
+          target: targetPath,
+          type: targetDir
+        });
+      } catch (error) {
+        // Log error and continue with next file
+        logger.error('Error uploading file', {
+          source: sourcePath,
+          error: error.message
+        });
+        
+        results.failedFiles++;
+        results.errors.push({
+          filename,
+          error: error.message
+        });
+      }
+    }
+    
+    // Send final progress update
+    if (progressChannel) {
+      event.sender.send(progressChannel, {
+        percent: 100,
+        current: filePaths.length,
+        total: filePaths.length,
+        completed: true
+      });
+    }
+    
+    // Return results
+    results.success = results.successfulFiles > 0;
+    
+    logger.info('Multiple file upload completed', {
+      totalFiles: results.totalFiles,
+      successful: results.successfulFiles,
+      failed: results.failedFiles
+    });
+    
+    return results;
+  } catch (error) {
+    logger.error('Error handling multiple file upload', {
+      error: error.message
+    });
+    
+    return {
+      success: false,
+      message: error.message,
+      totalFiles: filePaths.length,
+      successfulFiles: 0,
+      failedFiles: filePaths.length
+    };
+  }
+}
 
 // Handler to list documents
 ipcMain.handle('list-documents', (event, dirType) => {

@@ -7,6 +7,23 @@ contextBridge.exposeInMainWorld(
     // Document management
     getDocumentPaths: () => ipcRenderer.invoke('get-document-paths'),
     importDocument: (targetDir) => ipcRenderer.invoke('import-document', targetDir),
+    uploadFiles: (files, targetDir, progressCallback) => {
+      // Create a unique channel for progress updates
+      const channel = `upload-files-progress-${Date.now()}`;
+      
+      // Set up progress listener
+      ipcRenderer.on(channel, (event, progress) => {
+        if (typeof progressCallback === 'function') {
+          progressCallback(progress);
+        }
+      });
+      
+      // Convert File objects to paths (required for upload)
+      const filePaths = Array.from(files).map(file => file.path);
+      
+      // Invoke the upload method
+      return ipcRenderer.invoke('upload-files', filePaths, targetDir, channel);
+    },
     listDocuments: (dirType) => ipcRenderer.invoke('list-documents', dirType),
     processDocument: (filePath) => ipcRenderer.invoke('process-document', filePath),
     processBatchDocuments: (filePaths, progressCallback) => {

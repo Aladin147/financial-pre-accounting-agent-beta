@@ -6,7 +6,7 @@
 <h3 align="center">For Moroccan Companies | Finance Law 2025 (Law No. 60-24) Compliant</h3>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-v3.1.2-D4B483.svg" alt="Version">
+  <img src="https://img.shields.io/badge/version-v3.2.0--beta-D4B483.svg" alt="Version">
   <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License">
   <img src="https://img.shields.io/badge/platform-Windows%20|%20macOS%20|%20Linux-lightgrey.svg" alt="Platform">
   <img src="https://img.shields.io/badge/node-%3E%3D12.0.0-green.svg" alt="Node Requirement">
@@ -153,64 +153,50 @@ This tool serves as a "pre-accountant" that helps businesses prepare, verify, an
 
 ---
 
-## 🚀 New in v3.1.2
+## 🚀 New in v3.2.0-beta
 
-### ✨ Enhanced User Interface Interactions
+### 📁 Enhanced Document Manager
 
-- **Fully Functional Navigation System**:
-  - Complete sidebar menu navigation with active state tracking
-  - Dynamic page content loading on navigation
-  - Proper breadcrumb and header updates
-  - Smooth transitions between pages
+- **Complete Document Organization System**:
+  - Structured tabs for Incoming and Outgoing invoices
+  - Intelligent document categorization
+  - Intuitive folder structure for financial documents
+  - Streamlined document navigation and filtering
 
-- **Interactive UI Elements**:
-  - Clickable menu items for all application sections
-  - Functional header action buttons (search, notifications, settings)
-  - Interactive user profile with account information display
-  - Improved button state feedback and hover effects
+- **Advanced Document Upload**:
+  - Powerful drag-and-drop document uploader with multi-file support
+  - Batch document upload with progress tracking
+  - Intelligent file type detection and validation
+  - Real-time upload status indicators
 
-- **Advanced Tax Calculator**:
-  - Real-time tax calculation with Finance Law 2025 rules
-  - Beautiful, formatted results display
-  - Progressive tax bracket breakdown
-  - Minimum contribution verification
-  - Effective tax rate calculation
+### 🔍 Document Processing Improvements
 
-### 📊 Dynamic Data Visualization
+- **Streamlined Document Processor**:
+  - Enhanced OCR and data extraction capabilities
+  - Multi-document selection for batch processing
+  - Interactive processing interface with live progress tracking
+  - Visual confidence score indicators for extracted data
+  - Improved data recognition for financial documents
 
-- **Interactive Chart System**:
-  - Real-time data updates on parameter changes
-  - Tooltip enhancements with more detailed information
-  - Enhanced animation effects for better visual feedback
-  - Improved legend and axis formatting
+- **User Experience Enhancements**:
+  - Improved document selection interactions
+  - Better visual feedback during document processing
+  - Enhanced UI for document management workflows
+  - Integrated help system for processing features
 
-- **Chart Interactions**:
-  - Hover effects for data point inspection
-  - Click interactions on chart elements
-  - Dynamic data filtering
-  - Export options for chart data and images
+### ⚙️ Technical Improvements
 
-### 💼 Improved Document Management
-
-- **Enhanced Document Interaction**:
-  - File information display on hover
-  - Quick action buttons for common operations
-  - Better visual indicators for document status
-  - Improved sorting and filtering
-
-### 🖥️ System Improvements
-
-- **Better Error Handling**:
-  - Improved error logging with timestamps
-  - User-friendly error messages
-  - Contextual error recovery options
-  - Detailed debugging information for developers
+- **Architecture Enhancements**:
+  - Event-driven architecture for document interactions
+  - Optimized document rendering for large sets
+  - Enhanced file handling with proper validation
+  - Improved UI performance with optimized rendering
 
 - **Performance Optimizations**:
-  - Faster application startup
-  - More responsive UI interactions
-  - Reduced memory footprint
-  - Better resource management for large document sets
+  - Faster document processing speed
+  - Reduced memory usage during batch operations
+  - More responsive document navigation
+  - Optimized storage of document metadata
 
 ---
 
@@ -745,6 +731,6 @@ The developers and contributors to this project cannot be held liable for any in
 ---
 
 <p align="center">
-  <b>Financial Pre-Accounting Manager v3.1.2</b><br>
+  <b>Financial Pre-Accounting Manager v3.2.0-beta</b><br>
   Developed with ❤️ for Moroccan businesses
 </p>
