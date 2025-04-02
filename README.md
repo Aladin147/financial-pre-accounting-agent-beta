@@ -6,7 +6,7 @@
 <h3 align="center">For Moroccan Companies | Finance Law 2025 (Law No. 60-24) Compliant</h3>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-v3.2.0--beta-D4B483.svg" alt="Version">
+  <img src="https://img.shields.io/badge/version-v3.3.0--dev-D4B483.svg" alt="Version">
   <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License">
   <img src="https://img.shields.io/badge/platform-Windows%20|%20macOS%20|%20Linux-lightgrey.svg" alt="Platform">
   <img src="https://img.shields.io/badge/node-%3E%3D12.0.0-green.svg" alt="Node Requirement">
@@ -731,6 +731,6 @@ The developers and contributors to this project cannot be held liable for any in
 ---
 
 <p align="center">
-  <b>Financial Pre-Accounting Manager v3.2.0-beta</b><br>
+  <b>Financial Pre-Accounting Manager v3.3.0-dev</b><br>
   Developed with ❤️ for Moroccan businesses
 </p>
