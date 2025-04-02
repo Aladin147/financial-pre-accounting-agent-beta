@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import CurrencyConverter from '../components/CurrencyConverter';
 
 /**
  * Document Manager page component
@@ -13,6 +14,8 @@ function DocumentManager() {
   const [activeTab, setActiveTab] = useState('incoming');
   const [isLoading, setIsLoading] = useState(true);
   const [importingDocument, setImportingDocument] = useState(false);
+  const [showConverter, setShowConverter] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState(null);
 
   // Load documents on component mount
   useEffect(() => {
@@ -88,7 +91,7 @@ function DocumentManager() {
     return (
       <div className="document-grid">
         {activeDocuments.map((doc, index) => (
-          <div key={index} className="document-card">
+          <div key={index} className="document-card" onClick={() => handleDocumentClick(doc)}>
             <div className="document-icon">
               {getDocumentIcon(doc.name)}
             </div>
@@ -96,6 +99,23 @@ function DocumentManager() {
             <div className="document-meta">
               {formatFileSize(doc.size)} • {formatDate(doc.createdAt)}
             </div>
+            {doc.currencies && doc.currencies.length > 0 && (
+              <div className="currency-info-section">
+                <div className="currency-info-title">
+                  Detected Currencies:
+                </div>
+                <div className="currency-list">
+                  {doc.currencies.map((currency, i) => (
+                    <span 
+                      key={i} 
+                      className={`document-currency-tag ${currency.code !== 'MAD' ? 'document-foreign-currency' : ''}`}
+                    >
+                      {currency.code}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -150,18 +170,42 @@ function DocumentManager() {
     );
   }
 
+  // Handle document click
+  const handleDocumentClick = (doc) => {
+    setSelectedDocument(doc);
+    setShowConverter(doc.hasForeignCurrency || false);
+  };
+
   return (
     <div className="document-manager-container">
       <div className="page-header">
         <h1>Document Manager</h1>
-        <button 
-          className="btn btn-primary" 
-          onClick={handleImportDocument}
-          disabled={importingDocument}
-        >
-          {importingDocument ? 'Importing...' : 'Import Document'}
-        </button>
+        <div className="header-actions">
+          <button 
+            className="btn btn-primary" 
+            onClick={handleImportDocument}
+            disabled={importingDocument}
+          >
+            {importingDocument ? 'Importing...' : 'Import Document'}
+          </button>
+          <button
+            className="btn btn-outline"
+            onClick={() => setShowConverter(!showConverter)}
+          >
+            Currency Converter
+          </button>
+        </div>
       </div>
+
+      {showConverter && (
+        <div className="converter-section">
+          <CurrencyConverter 
+            initialAmount={selectedDocument?.amount || 0}
+            initialFromCurrency={selectedDocument?.primaryCurrency || 'MAD'}
+            initialToCurrency={selectedDocument?.primaryCurrency === 'MAD' ? 'EUR' : 'MAD'}
+          />
+        </div>
+      )}
       
       <div className="tabs">
         <button 

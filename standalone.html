@@ -2,159 +2,1093 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Financial Pre-Accounting Agent v2.0.0</title>
+  <title>Financial Pre-Accounting Agent v3.1.2</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    :root {
+      /* Primary colors */
+      --primary: #D4B483;
+      --primary-light: #F0E2C4;
+      --primary-dark: #C19A58;
+      
+      /* Secondary color */
+      --secondary: #6B4E71;
+      --secondary-light: #9A7BA5;
+      --secondary-dark: #4A3B4F;
+      
+      /* Background colors */
+      --bg-dark: #0a0a0a;
+      --bg-card: #121212;
+      --bg-card-hover: #1a1a1a;
+      
+      /* Text colors */
+      --text-primary: rgba(255, 255, 255, 0.92);
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --text-tertiary: rgba(255, 255, 255, 0.5);
+      
+      /* Status colors */
+      --success: #4CD97B;
+      --warning: #FFB020;
+      --error: #FF6166;
+      --info: #64B5F6;
+      
+      /* Border & layout */
+      --border-radius-sm: 6px;
+      --border-radius-md: 12px;
+      --border-radius-lg: 16px;
+      --border-color: rgba(255, 255, 255, 0.1);
+      
+      /* Shadows */
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.25);
+      
+      /* Animation */
+      --transition-fast: 0.15s ease;
+      --transition-normal: 0.25s ease;
+      --transition-slow: 0.4s ease;
+    }
+    
+    * {
       margin: 0;
       padding: 0;
-      background-color: #f5f5f5;
-      color: #333;
+      box-sizing: border-box;
     }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .header {
-      background-color: #1a73e8;
-      color: white;
-      padding: 20px;
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      overflow-x: hidden;
       display: flex;
-      justify-content: space-between;
+      height: 100vh;
+    }
+    
+    /* Sidebar Styles */
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      background: linear-gradient(180deg, #151515 0%, #0a0a0a 100%);
+      border-right: 1px solid var(--border-color);
+      padding: 24px 0;
+      transition: var(--transition-normal);
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      padding: 0 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 16px;
+    }
+    
+    .sidebar-logo {
+      display: flex;
       align-items: center;
     }
-    .header h1 {
-      margin: 0;
-      font-size: 24px;
+    
+    .logo-icon {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--bg-dark);
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
+      margin-right: 10px;
+      box-shadow: var(--shadow-sm);
     }
-    .version {
-      background-color: rgba(255, 255, 255, 0.2);
-      padding: 5px 10px;
-      border-radius: 4px;
+    
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .logo-text h1 {
       font-size: 14px;
+      font-weight: 600;
+      margin: 0;
     }
-    .card {
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
-      padding: 20px;
+    
+    .logo-text span {
+      font-size: 10px;
+      color: var(--text-tertiary);
     }
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
+    
+    .sidebar-menu {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 8px;
     }
-    .feature-card {
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 20px;
-      background-color: white;
+    
+    .menu-section {
+      margin-bottom: 16px;
     }
-    .feature-card h3 {
-      margin-top: 0;
-      color: #1a73e8;
+    
+    .menu-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-tertiary);
+      padding: 8px 12px;
+      margin-bottom: 4px;
     }
-    .feature-icon {
-      font-size: 32px;
-      margin-bottom: 10px;
-    }
-    button {
-      background-color: #1a73e8;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
+    
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: var(--border-radius-sm);
       cursor: pointer;
+      transition: var(--transition-fast);
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+      position: relative;
+    }
+    
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+    }
+    
+    .menu-item.active {
+      background-color: rgba(212, 180, 131, 0.15);
+      color: var(--primary);
+    }
+    
+    .menu-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 20px;
+      background-color: var(--primary);
+      border-radius: 0 3px 3px 0;
+    }
+    
+    .menu-item i {
+      width: 22px;
+      text-align: center;
+      margin-right: 12px;
+      font-size: 16px;
+    }
+    
+    .menu-item span {
       font-size: 14px;
       font-weight: 500;
     }
-    button:hover {
-      background-color: #1557b0;
+    
+    .menu-item .badge {
+      background-color: var(--primary);
+      color: var(--bg-dark);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-left: auto;
     }
+    
+    .sidebar-footer {
+      border-top: 1px solid var(--border-color);
+      padding: 16px 12px;
+    }
+    
+    .sidebar-user {
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      border-radius: var(--border-radius-sm);
+      transition: var(--transition-fast);
+      cursor: pointer;
+    }
+    
+    .sidebar-user:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--secondary-light) 0%, var(--secondary) 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      margin-right: 10px;
+    }
+    
+    .user-info {
+      flex: 1;
+    }
+    
+    .user-name {
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    .user-role {
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+    
+    /* Main Content Styles */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    
+    .header {
+      background: linear-gradient(90deg, rgba(212, 180, 131, 0.15) 0%, rgba(212, 180, 131, 0.05) 100%);
+      backdrop-filter: blur(10px);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .header-title {
+      display: flex;
+      align-items: center;
+    }
+    
+    .header-title h2 {
+      font-size: 18px;
+      font-weight: 600;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .header-breadcrumb {
+      display: flex;
+      align-items: center;
+      margin-left: 16px;
+      color: var(--text-tertiary);
+      font-size: 13px;
+    }
+    
+    .header-breadcrumb i {
+      font-size: 10px;
+      margin: 0 8px;
+    }
+    
+    .header-breadcrumb span:last-child {
+      color: var(--text-secondary);
+    }
+    
+    .header-actions {
+      display: flex;
+      align-items: center;
+    }
+    
+    .action-item {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 8px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      color: var(--text-secondary);
+      position: relative;
+    }
+    
+    .action-item:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+    }
+    
+    .action-item .notification-dot {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--error);
+    }
+    
+    .dashboard {
+      padding: 24px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-gap: 24px;
+    }
+    
+    .welcome-card {
+      grid-column: span 12;
+      background: linear-gradient(110deg, var(--bg-card) 0%, var(--bg-card-hover) 100%);
+      backdrop-filter: blur(5px);
+      border-radius: var(--border-radius-lg);
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .welcome-card::before {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(212, 180, 131, 0.2) 0%, transparent 70%);
+      top: -100px;
+      right: -50px;
+      border-radius: 50%;
+    }
+    
+    .welcome-card::after {
+      content: '';
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(107, 78, 113, 0.15) 0%, transparent 70%);
+      bottom: -50px;
+      left: 30%;
+      border-radius: 50%;
+    }
+    
+    .welcome-content {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .welcome-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    
+    .welcome-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    
+    .welcome-actions {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .welcome-stats {
+      display: flex;
+      gap: 24px;
+      margin-top: 24px;
+    }
+    
+    .stat-item {
+      display: flex;
+      align-items: center;
+    }
+    
+    .stat-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--border-radius-sm);
+      background-color: rgba(212, 180, 131, 0.1);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-right: 12px;
+    }
+    
+    .stat-info h3 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .stat-info span {
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+    
+    .report-card {
+      grid-column: span 8;
+      background-color: var(--bg-card);
+      border-radius: var(--border-radius-lg);
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      position: relative;
+      transition: var(--transition-normal);
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .report-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: rgba(212, 180, 131, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .card-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .card-action {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--border-radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+    
+    .card-action:hover {
+      background-color: rgba(212, 180, 131, 0.1);
+      color: var(--primary);
+    }
+    
+    .chart-container {
+      flex: 1;
+      position: relative;
+    }
+    
+    .document-card {
+      grid-column: span 4;
+      background-color: var(--bg-card);
+      border-radius: var(--border-radius-lg);
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      position: relative;
+      transition: var(--transition-normal);
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .document-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: rgba(212, 180, 131, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .donut-chart-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .card-grid {
+      grid-column: span 12;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    
+    .feature-card {
+      background-color: var(--bg-card);
+      backdrop-filter: blur(5px);
+      border-radius: var(--border-radius-lg);
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      position: relative;
+      transition: var(--transition-normal);
+      overflow: hidden;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(212, 180, 131, 0.1) 0%, transparent 70%);
+      top: -20px;
+      right: -20px;
+      border-radius: 50%;
+      z-index: 0;
+    }
+    
+    .feature-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: rgba(212, 180, 131, 0.2);
+      transform: translateY(-3px);
+    }
+    
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--border-radius-sm);
+      background-color: rgba(212, 180, 131, 0.1);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .feature-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .feature-description {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.5;
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .feature-action {
+      margin-top: auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Buttons */
+    .btn {
+      background-color: transparent;
+      border: none;
+      border-radius: var(--border-radius-sm);
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn i {
+      font-size: 14px;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--bg-dark);
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      box-shadow: 0 0 12px rgba(212, 180, 131, 0.3);
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background-color: var(--secondary-dark);
+      box-shadow: 0 0 12px rgba(107, 78, 113, 0.3);
+    }
+    
+    .btn-outline {
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+    
+    .btn-outline:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      border-color: var(--primary-light);
+    }
+    
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+    
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .btn-icon.btn-sm {
+      width: 28px;
+      height: 28px;
+    }
+    
+    /* Modal & Overlays */
+    #app-info {
+      margin-top: 16px;
+    }
+    
+    .modal-card {
+      background-color: var(--bg-card);
+      border-radius: var(--border-radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      animation: fadeInUp 0.3s ease forwards;
+      backdrop-filter: blur(5px);
+    }
+    
+    .modal-card h3 {
+      color: var(--primary);
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    
+    .modal-card ul {
+      margin: 16px 0;
+      padding-left: 20px;
+    }
+    
+    .modal-card ul li {
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+    }
+    
+    .modal-card p {
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    
+    #log-area {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-md);
+      padding: 16px;
+      margin-top: 24px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: 'Consolas', monospace;
+      font-size: 12px;
+    }
+    
+    .log-entry {
+      margin-bottom: 8px;
+      padding: 8px;
+      border-radius: var(--border-radius-sm);
+      background-color: rgba(255, 255, 255, 0.03);
+      color: var(--text-secondary);
+    }
+    
+    .log-entry.success {
+      color: var(--success);
+      border-left: 3px solid var(--success);
+    }
+    
+    .log-entry.error {
+      color: var(--error);
+      border-left: 3px solid var(--error);
+    }
+    
     .footer {
       text-align: center;
       padding: 20px;
-      color: #666;
-      font-size: 14px;
-      border-top: 1px solid #eee;
-      margin-top: 40px;
+      color: var(--text-tertiary);
+      font-size: 12px;
+      border-top: 1px solid var(--border-color);
+      margin-top: auto;
     }
-    #log-area {
-      background-color: #f5f5f5;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 10px;
-      margin-top: 20px;
-      max-height: 200px;
-      overflow-y: auto;
-      font-family: monospace;
+    
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
-    .log-entry {
-      margin-bottom: 5px;
-      padding: 5px;
-      border-bottom: 1px solid #eee;
+    
+    .fade-in {
+      animation: fadeInUp 0.4s ease forwards;
     }
-    .success { color: green; }
-    .error { color: red; }
+    
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .dashboard {
+        grid-template-columns: repeat(6, 1fr);
+      }
+      
+      .report-card {
+        grid-column: span 6;
+      }
+      
+      .document-card {
+        grid-column: span 6;
+      }
+      
+      .card-grid {
+        grid-column: span 6;
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 70px;
+      }
+      
+      .logo-text, .menu-item span, .menu-section-title, .user-info {
+        display: none;
+      }
+      
+      .menu-item i {
+        margin-right: 0;
+        font-size: 18px;
+      }
+      
+      .sidebar-user {
+        justify-content: center;
+      }
+      
+      .user-avatar {
+        margin-right: 0;
+      }
+      
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+      
+      .report-card, .document-card, .card-grid {
+        grid-column: span 1;
+      }
+      
+      .welcome-stats {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>Financial Pre-Accounting Agent</h1>
-    <div class="version">Version 2.0.0-beta</div>
-  </div>
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon">
+          <i class="fa-solid fa-calculator"></i>
+        </div>
+        <div class="logo-text">
+          <h1>Financial Agent</h1>
+          <span>v3.1.2</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="sidebar-menu">
+      <div class="menu-section">
+        <h3 class="menu-section-title">Main Menu</h3>
+        <div class="menu-item active">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>Dashboard</span>
+        </div>
+        <div class="menu-item">
+          <i class="fa-solid fa-folder-open"></i>
+          <span>Documents</span>
+          <div class="badge">16</div>
+        </div>
+        <div class="menu-item">
+          <i class="fa-solid fa-calculator"></i>
+          <span>Tax Calculator</span>
+        </div>
+        <div class="menu-item">
+          <i class="fa-solid fa-file-invoice"></i>
+          <span>Invoices</span>
+        </div>
+      </div>
+      
+      <div class="menu-section">
+        <h3 class="menu-section-title">Analytics</h3>
+        <div class="menu-item">
+          <i class="fa-solid fa-chart-column"></i>
+          <span>Reports</span>
+        </div>
+        <div class="menu-item">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Statistics</span>
+        </div>
+      </div>
+      
+      <div class="menu-section">
+        <h3 class="menu-section-title">System</h3>
+        <div class="menu-item">
+          <i class="fa-solid fa-gear"></i>
+          <span>Settings</span>
+        </div>
+        <div class="menu-item">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Help</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar">MA</div>
+        <div class="user-info">
+          <div class="user-name">Moroccan Accounting</div>
+          <div class="user-role">Administrator</div>
+        </div>
+      </div>
+    </div>
+  </aside>
   
-  <div class="container">
-    <div class="card">
-      <h2>Pre-Accounting Manager for Moroccan Companies</h2>
-      <p>Enhanced with Finance Law 2025 (Law No. 60-24) compliance</p>
-      
-      <div id="app-info"></div>
-      
-      <div id="app-controls">
-        <button id="get-app-info">Show App Info</button>
-        <button id="view-logs">View Logs</button>
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <div class="header-title">
+        <h2>Dashboard</h2>
+        <div class="header-breadcrumb">
+          <span>Home</span>
+          <i class="fa-solid fa-chevron-right"></i>
+          <span>Dashboard</span>
+        </div>
       </div>
-    </div>
+      
+      <div class="header-actions">
+        <div class="action-item">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <div class="action-item">
+          <i class="fa-solid fa-bell"></i>
+          <div class="notification-dot"></div>
+        </div>
+        <div class="action-item">
+          <i class="fa-solid fa-gear"></i>
+        </div>
+      </div>
+    </header>
     
-    <h2>New in Version 2.0.0-beta</h2>
-    
-    <div class="features">
-      <div class="feature-card">
-        <div class="feature-icon">📄</div>
-        <h3>PDF Report Generation</h3>
-        <p>Professional PDF reports with company branding. Detailed financial summaries and tax calculations.</p>
-        <button id="generate-report">Generate Sample Report</button>
+    <section class="dashboard">
+      <!-- Welcome Card -->
+      <div class="welcome-card fade-in">
+        <div class="welcome-content">
+          <h1 class="welcome-title">Welcome to Financial Pre-Accounting Agent</h1>
+          <p class="welcome-subtitle">
+            Organize your financial documents, generate tax reports, and estimate payments based on Moroccan Finance Law 2025.
+            Keep track of your invoices and streamline your accounting workflow.
+          </p>
+          <div class="welcome-actions">
+            <button class="btn btn-primary" id="get-app-info">
+              <i class="fa-solid fa-info-circle"></i>
+              App Information
+            </button>
+            <button class="btn btn-outline" id="view-logs">
+              <i class="fa-solid fa-terminal"></i>
+              View Logs
+            </button>
+          </div>
+          
+          <div class="welcome-stats">
+            <div class="stat-item">
+              <div class="stat-icon">
+                <i class="fa-solid fa-file-invoice"></i>
+              </div>
+              <div class="stat-info">
+                <h3>24</h3>
+                <span>Incoming Documents</span>
+              </div>
+            </div>
+            
+            <div class="stat-item">
+              <div class="stat-icon">
+                <i class="fa-solid fa-file-export"></i>
+              </div>
+              <div class="stat-info">
+                <h3>12</h3>
+                <span>Outgoing Documents</span>
+              </div>
+            </div>
+            
+            <div class="stat-item">
+              <div class="stat-icon">
+                <i class="fa-solid fa-calculator"></i>
+              </div>
+              <div class="stat-info">
+                <h3>4</h3>
+                <span>Tax Calculations</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       
-      <div class="feature-card">
-        <div class="feature-icon">🧮</div>
-        <h3>Finance Law 2025 Tax Engine</h3>
-        <p>Complete implementation of progressive tax rates, minimum contribution calculation, and social solidarity contribution.</p>
-        <button id="run-tax-calculation">Run Tax Calculation</button>
+      <!-- Financial Charts -->
+      <div class="report-card fade-in" style="animation-delay: 0.1s;">
+        <div class="card-header">
+          <h3 class="card-title">Revenue & Expenses</h3>
+          <div class="card-actions">
+            <button class="card-action btn-icon btn-sm">
+              <i class="fa-solid fa-download"></i>
+            </button>
+            <button class="card-action btn-icon btn-sm">
+              <i class="fa-solid fa-rotate"></i>
+            </button>
+            <button class="card-action btn-icon btn-sm">
+              <i class="fa-solid fa-ellipsis-vertical"></i>
+            </button>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="revenue-chart"></canvas>
+        </div>
       </div>
       
-      <div class="feature-card">
-        <div class="feature-icon">📋</div>
-        <h3>Document Organization</h3>
-        <p>Enhanced document metadata tracking and improved organization for accounting handover.</p>
-        <button id="document-info">View Document Info</button>
+      <!-- Document Distribution -->
+      <div class="document-card fade-in" style="animation-delay: 0.2s;">
+        <div class="card-header">
+          <h3 class="card-title">Document Distribution</h3>
+          <div class="card-actions">
+            <button class="card-action btn-icon btn-sm">
+              <i class="fa-solid fa-filter"></i>
+            </button>
+            <button class="card-action btn-icon btn-sm">
+              <i class="fa-solid fa-ellipsis-vertical"></i>
+            </button>
+          </div>
+        </div>
+        <div class="donut-chart-container">
+          <canvas id="document-chart"></canvas>
+        </div>
       </div>
-    </div>
+      
+      <!-- Feature Cards -->
+      <div class="card-grid fade-in" style="animation-delay: 0.3s;">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-calculator"></i>
+          </div>
+          <h3 class="feature-title">Finance Law 2025 Tax Engine</h3>
+          <p class="feature-description">
+            Complete implementation of progressive tax rates, minimum contribution calculation, and social solidarity contribution.
+          </p>
+          <div class="feature-action">
+            <button class="btn btn-sm btn-outline" id="run-tax-calculation">
+              <i class="fa-solid fa-play"></i>
+              Run Tax Calculation
+            </button>
+          </div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-file-export"></i>
+          </div>
+          <h3 class="feature-title">PDF Report Generation</h3>
+          <p class="feature-description">
+            Professional PDF reports with company branding. Detailed financial summaries and tax calculations.
+          </p>
+          <div class="feature-action">
+            <button class="btn btn-sm btn-outline" id="generate-report">
+              <i class="fa-solid fa-file-pdf"></i>
+              Generate Sample Report
+            </button>
+          </div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-folder-tree"></i>
+          </div>
+          <h3 class="feature-title">Document Organization</h3>
+          <p class="feature-description">
+            Enhanced document metadata tracking and improved organization for accounting handover.
+          </p>
+          <div class="feature-action">
+            <button class="btn btn-sm btn-outline" id="document-info">
+              <i class="fa-solid fa-folder-open"></i>
+              View Document Info
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- App Info Area -->
+      <div id="app-info" class="fade-in" style="animation-delay: 0.4s;"></div>
+      
+      <!-- Log Area -->
+      <div id="log-area" class="fade-in" style="animation-delay: 0.45s;">
+        <div class="log-entry">Application loaded successfully</div>
+      </div>
+    </section>
     
-    <div id="log-area">
-      <div class="log-entry">Application loaded successfully</div>
-    </div>
-  </div>
-  
-  <div class="footer">
-    Financial Pre-Accounting Agent v2.0.0-beta | Based on Finance Law 2025 (Law No. 60-24)
-  </div>
+    <footer class="footer">
+      Financial Pre-Accounting Agent v3.1.2 | Based on Finance Law 2025 (Law No. 60-24) | <span id="current-year"></span>
+    </footer>
+  </main>
 
+  <!-- JavaScript -->
   <script>
-    // Log function to add entries to the log area
+    // Chart.js configuration
+    Chart.defaults.color = 'rgba(255, 255, 255, 0.7)';
+    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    
+    // Create gradient for charts
+    function createGradient(ctx, color1, color2) {
+      const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+      gradient.addColorStop(0, color1);
+      gradient.addColorStop(1, color2);
+      return gradient;
+    }
+    
+    // Logging function
     function log(message, type = 'info') {
       const logArea = document.getElementById('log-area');
       const entry = document.createElement('div');
@@ -163,172 +1097,516 @@
       if (type === 'success') entry.classList.add('success');
       if (type === 'error') entry.classList.add('error');
       
-      entry.textContent = message;
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
       logArea.appendChild(entry);
       logArea.scrollTop = logArea.scrollHeight;
     }
     
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      // Try to check if electronAPI is available
-      try {
-        if (window.electronAPI) {
-          log('ElectronAPI detected - running in Electron', 'success');
-        } else {
-          log('ElectronAPI not found - running in browser mode', 'error');
-        }
-      } catch (e) {
-        log(`Error during initialization: ${e.message}`, 'error');
-      }
+    // Current year for footer
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+    
+    // Create page containers for extra pages
+    function createPageContainers() {
+      const mainContent = document.querySelector('.main-content');
+      const dashboard = document.querySelector('.dashboard');
       
-      // Set up event listeners
-      document.getElementById('get-app-info').addEventListener('click', () => {
-        try {
-          if (window.electronAPI) {
-            const versionInfo = window.electronAPI.getAppVersion();
-            const appInfo = document.getElementById('app-info');
-            appInfo.innerHTML = `
-              <div style="margin: 20px 0; padding: 10px; background-color: #f5f5f5; border-left: 4px solid #1a73e8;">
-                <p><strong>Application Name:</strong> ${versionInfo.name}</p>
-                <p><strong>Version:</strong> ${versionInfo.version}</p>
-                <p><strong>Tax Rule Version:</strong> Finance Law 2025 (Law No. 60-24)</p>
+      // Create page containers
+      const pages = [
+        { id: 'documents', title: 'Documents', icon: 'folder-open' },
+        { id: 'tax-calculator', title: 'Tax Calculator', icon: 'calculator' },
+        { id: 'invoices', title: 'Invoices', icon: 'file-invoice' },
+        { id: 'reports', title: 'Reports', icon: 'chart-column' },
+        { id: 'statistics', title: 'Statistics', icon: 'chart-pie' },
+        { id: 'settings', title: 'Settings', icon: 'gear' },
+        { id: 'help', title: 'Help', icon: 'circle-info' }
+      ];
+      
+      pages.forEach(page => {
+        const pageContainer = document.createElement('section');
+        pageContainer.className = 'dashboard';
+        pageContainer.id = `${page.id}-page`;
+        pageContainer.style.display = 'none';
+        
+        pageContainer.innerHTML = `
+          <div class="welcome-card fade-in">
+            <div class="welcome-content">
+              <h1 class="welcome-title">${page.title}</h1>
+              <p class="welcome-subtitle">
+                This is the ${page.title.toLowerCase()} page of the Financial Pre-Accounting Agent.
+                Here you can manage all ${page.title.toLowerCase()}-related functions in accordance with Moroccan Finance Law 2025.
+              </p>
+              
+              <div class="content-placeholder">
+                <i class="fa-solid fa-${page.icon}" style="font-size: 48px; margin-bottom: 16px;"></i>
+                <p>Content for ${page.title} will be implemented in the next version.</p>
               </div>
-            `;
-            log('Retrieved application information', 'success');
-          } else {
-            log('Cannot get app info - ElectronAPI not available', 'error');
-          }
-        } catch (e) {
-          log(`Error getting app info: ${e.message}`, 'error');
-        }
+            </div>
+          </div>
+        `;
+        
+        mainContent.insertBefore(pageContainer, document.querySelector('.footer'));
       });
       
-      document.getElementById('view-logs').addEventListener('click', () => {
-        try {
-          if (window.electronAPI) {
-            window.electronAPI.viewLogs();
-            log('Log viewer launched', 'success');
-          } else {
-            log('Cannot view logs - ElectronAPI not available', 'error');
-          }
-        } catch (e) {
-          log(`Error viewing logs: ${e.message}`, 'error');
-        }
+      // Create special content for tax calculator
+      const taxCalculatorPage = document.getElementById('tax-calculator-page');
+      if (taxCalculatorPage) {
+        taxCalculatorPage.innerHTML = `
+          <div class="welcome-card fade-in">
+            <div class="welcome-content">
+              <h1 class="welcome-title">Tax Calculator</h1>
+              <p class="welcome-subtitle">
+                Calculate your taxes based on Morocco's Finance Law 2025. This calculator implements 
+                the latest progressive tax rates and minimum contribution rules.
+              </p>
+              
+              <div class="card" style="margin-top: 20px;">
+                <h2 class="card-title">Tax Calculation Form</h2>
+                <form id="tax-form" style="margin-top: 20px;">
+                  <div style="margin-bottom: 16px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">Revenue (MAD)</label>
+                    <input type="number" id="revenue-input" placeholder="Enter total revenue" 
+                      style="width: 100%; padding: 10px; background-color: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); color: var(--text-primary);" 
+                      value="1500000">
+                  </div>
+                  
+                  <div style="margin-bottom: 16px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">Expenses (MAD)</label>
+                    <input type="number" id="expenses-input" placeholder="Enter total expenses" 
+                      style="width: 100%; padding: 10px; background-color: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); color: var(--text-primary);" 
+                      value="800000">
+                  </div>
+                  
+                  <div style="margin-bottom: 16px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">Other Deductions (MAD)</label>
+                    <input type="number" id="deductions-input" placeholder="Enter other deductions" 
+                      style="width: 100%; padding: 10px; background-color: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); color: var(--text-primary);" 
+                      value="50000">
+                  </div>
+                  
+                  <div style="margin-top: 24px; display: flex; gap: 12px;">
+                    <button type="button" id="calculate-tax-btn" class="btn btn-primary">
+                      <i class="fa-solid fa-calculator"></i>
+                      Calculate Tax
+                    </button>
+                    
+                    <button type="reset" class="btn btn-outline">
+                      <i class="fa-solid fa-eraser"></i>
+                      Reset
+                    </button>
+                  </div>
+                </form>
+              </div>
+              
+              <div id="tax-results" class="card" style="margin-top: 20px; display: none;">
+                <h2 class="card-title">Tax Calculation Results</h2>
+                <div id="tax-results-content" style="margin-top: 16px;"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+    
+    // Initialize charts on document load
+    document.addEventListener('DOMContentLoaded', () => {
+      // Create page containers for sidebar menu items
+      createPageContainers();
+      
+      // Handle sidebar menu item clicks
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function() {
+          // Remove active class from all menu items
+          document.querySelectorAll('.menu-item').forEach(mi => mi.classList.remove('active'));
+          // Add active class to clicked menu item
+          this.classList.add('active');
+          
+          // Get the menu item text
+          const menuText = this.querySelector('span')?.textContent || 'Dashboard';
+          
+          // Update header title and breadcrumb
+          document.querySelector('.header-title h2').textContent = menuText;
+          document.querySelector('.header-breadcrumb span:last-child').textContent = menuText;
+          
+          // Get the corresponding page ID
+          let pageId;
+          if (menuText === 'Dashboard') pageId = 'dashboard';
+          else pageId = menuText.toLowerCase().replace(/\s+/g, '-');
+          
+          // Hide all pages
+          document.querySelectorAll('.dashboard').forEach(page => {
+            page.style.display = 'none';
+          });
+          
+          // Show the selected page
+          const targetPage = document.getElementById(`${pageId}-page`) || 
+                             document.querySelector('.dashboard');
+          targetPage.style.display = 'grid';
+          
+          log(`Navigated to ${menuText}`, 'success');
+        });
       });
       
-      document.getElementById('run-tax-calculation').addEventListener('click', () => {
-        try {
-          if (window.electronAPI) {
-            const taxData = {
-              revenue: 1500000,
-              expenses: 800000,
-              otherDeductions: 50000
+      // Handle header action icons
+      document.querySelectorAll('.action-item').forEach(item => {
+        item.addEventListener('click', function() {
+          const icon = this.querySelector('i');
+          const iconClass = icon.className;
+          
+          let actionName = 'Unknown';
+          if (iconClass.includes('magnifying-glass')) actionName = 'Search';
+          else if (iconClass.includes('bell')) actionName = 'Notifications';
+          else if (iconClass.includes('gear')) actionName = 'Settings';
+          
+          log(`${actionName} action clicked`, 'info');
+          
+          if (actionName === 'Settings') {
+            // Activate Settings menu item
+            document.querySelectorAll('.menu-item').forEach(mi => {
+              if (mi.querySelector('span')?.textContent === 'Settings') {
+                mi.click();
+              }
+            });
+          }
+        });
+      });
+      
+      // Handle user account click
+      document.querySelector('.sidebar-user').addEventListener('click', function() {
+        const appInfo = document.getElementById('app-info');
+        appInfo.innerHTML = `
+          <div class="modal-card">
+            <h3>User Account</h3>
+            <p><strong>Name:</strong> Moroccan Accounting</p>
+            <p><strong>Role:</strong> Administrator</p>
+            <p><strong>Last Login:</strong> April 1, 2025 11:32 PM</p>
+            <p><strong>Session:</strong> Active for 32 minutes</p>
+            
+            <h3 style="margin-top: 16px;">Account Features</h3>
+            <ul>
+              <li>Full administrator access</li>
+              <li>Document management permissions</li>
+              <li>Tax calculation authorization</li>
+              <li>Report generation</li>
+              <li>System configuration</li>
+            </ul>
+          </div>
+        `;
+        log('User account information displayed', 'success');
+      });
+      
+      // Add event listener for tax calculator in the special page
+      document.addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'calculate-tax-btn') {
+          const revenueInput = document.getElementById('revenue-input');
+          const expensesInput = document.getElementById('expenses-input');
+          const deductionsInput = document.getElementById('deductions-input');
+          
+          if (revenueInput && expensesInput && deductionsInput) {
+            const revenue = parseFloat(revenueInput.value) || 0;
+            const expenses = parseFloat(expensesInput.value) || 0;
+            const deductions = parseFloat(deductionsInput.value) || 0;
+            
+            // Calculate taxable income
+            const taxableIncome = Math.max(0, revenue - expenses - deductions);
+            
+            // Finance Law 2025 tax brackets
+            let tax = 0;
+            if (taxableIncome <= 300000) {
+              tax = taxableIncome * 0.175;
+            } else if (taxableIncome <= 1000000) {
+              tax = 300000 * 0.175 + (taxableIncome - 300000) * 0.2;
+            } else {
+              tax = 300000 * 0.175 + 700000 * 0.2 + (taxableIncome - 1000000) * 0.2275;
+            }
+            
+            // Minimum contribution calculation (0.25% of revenue)
+            const minimumContribution = revenue * 0.0025;
+            
+            // Final tax is the higher of calculated tax and minimum contribution
+            const finalTax = Math.max(tax, minimumContribution);
+            
+            // Effective tax rate
+            const effectiveTaxRate = taxableIncome > 0 ? (finalTax / taxableIncome) * 100 : 0;
+            
+            // Format numbers
+            const formatNumber = (num) => {
+              return num.toLocaleString('fr-MA', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              });
             };
             
-            window.electronAPI.calculateTax(taxData)
-              .then(result => {
-                if (result.error) {
-                  log(`Tax calculation error: ${result.error}`, 'error');
-                  return;
-                }
-                
-                const appInfo = document.getElementById('app-info');
-                appInfo.innerHTML = `
-                  <div style="margin: 20px 0; padding: 10px; background-color: #f5f5f5; border-left: 4px solid #1a73e8;">
-                    <h3>Tax Calculation Results</h3>
-                    <p><strong>Revenue:</strong> ${result.revenue.toLocaleString()} MAD</p>
-                    <p><strong>Expenses:</strong> ${result.expenses.toLocaleString()} MAD</p>
-                    <p><strong>Taxable Income:</strong> ${result.taxableIncome.toLocaleString()} MAD</p>
-                    <p><strong>Calculated Tax:</strong> ${result.calculatedTax.toLocaleString()} MAD</p>
-                    <p><strong>Minimum Contribution:</strong> ${result.minimumContribution.toLocaleString()} MAD</p>
-                    <p><strong>Final Tax:</strong> ${result.finalTax.toLocaleString()} MAD</p>
-                    <p><strong>Effective Tax Rate:</strong> ${result.effectiveTaxRate.toFixed(2)}%</p>
-                  </div>
-                `;
-                
-                log('Tax calculation completed successfully', 'success');
-              })
-              .catch(err => {
-                log(`Tax calculation failed: ${err.message}`, 'error');
-              });
-          } else {
-            log('Cannot run tax calculation - ElectronAPI not available', 'error');
-          }
-        } catch (e) {
-          log(`Error with tax calculation: ${e.message}`, 'error');
-        }
-      });
-      
-      document.getElementById('generate-report').addEventListener('click', () => {
-        try {
-          if (window.electronAPI) {
-            const reportOptions = {
-              reportType: 'financial-summary',
-              name: 'Sample Financial Summary',
-              startDate: '2025-01-01',
-              endDate: '2025-03-31'
-            };
-            
-            window.electronAPI.generateReport(reportOptions)
-              .then(result => {
-                if (!result.success) {
-                  log(`Report generation error: ${result.error}`, 'error');
-                  return;
-                }
-                
-                const appInfo = document.getElementById('app-info');
-                appInfo.innerHTML = `
-                  <div style="margin: 20px 0; padding: 10px; background-color: #f5f5f5; border-left: 4px solid #1a73e8;">
-                    <h3>Report Generated Successfully</h3>
-                    <p><strong>Report Type:</strong> Financial Summary</p>
-                    <p><strong>File:</strong> ${result.path}</p>
-                    <p><strong>Period:</strong> Q1 2025</p>
-                  </div>
-                `;
-                
-                log('PDF report generated successfully', 'success');
-              })
-              .catch(err => {
-                log(`Report generation failed: ${err.message}`, 'error');
-              });
-          } else {
-            log('Cannot generate report - ElectronAPI not available', 'error');
-          }
-        } catch (e) {
-          log(`Error generating report: ${e.message}`, 'error');
-        }
-      });
-      
-      document.getElementById('document-info').addEventListener('click', () => {
-        try {
-          if (window.electronAPI) {
-            Promise.all([
-              window.electronAPI.listDocuments('incoming'),
-              window.electronAPI.listDocuments('outgoing'),
-              window.electronAPI.getDocumentPaths()
-            ]).then(([incomingDocs, outgoingDocs, paths]) => {
-              const appInfo = document.getElementById('app-info');
-              appInfo.innerHTML = `
-                <div style="margin: 20px 0; padding: 10px; background-color: #f5f5f5; border-left: 4px solid #1a73e8;">
-                  <h3>Document Information</h3>
-                  <p><strong>Total Incoming Documents:</strong> ${incomingDocs.length}</p>
-                  <p><strong>Total Outgoing Documents:</strong> ${outgoingDocs.length}</p>
-                  <p><strong>Main Documents Path:</strong> ${paths.main}</p>
-                  <p><strong>Incoming Documents Path:</strong> ${paths.incoming}</p>
-                  <p><strong>Outgoing Documents Path:</strong> ${paths.outgoing}</p>
+            // Display results
+            const taxResultsContent = document.getElementById('tax-results-content');
+            if (taxResultsContent) {
+              taxResultsContent.innerHTML = `
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
+                  <span style="font-weight: 500;">Revenue:</span>
+                  <span style="font-weight: 600;">${formatNumber(revenue)} MAD</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
+                  <span style="font-weight: 500;">Expenses:</span>
+                  <span style="font-weight: 600;">${formatNumber(expenses)} MAD</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
+                  <span style="font-weight: 500;">Other Deductions:</span>
+                  <span style="font-weight: 600;">${formatNumber(deductions)} MAD</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
+                  <span style="font-weight: 500;">Taxable Income:</span>
+                  <span style="font-weight: 600;">${formatNumber(taxableIncome)} MAD</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
+                  <span style="font-weight: 500;">Calculated Tax:</span>
+                  <span style="font-weight: 600;">${formatNumber(tax)} MAD</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
+                  <span style="font-weight: 500;">Minimum Contribution:</span>
+                  <span style="font-weight: 600;">${formatNumber(minimumContribution)} MAD</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
+                  <span style="font-weight: 500;">Final Tax:</span>
+                  <span style="font-weight: 600; color: var(--primary);">${formatNumber(finalTax)} MAD</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+                  <span style="font-weight: 500;">Effective Tax Rate:</span>
+                  <span style="font-weight: 600; color: var(--primary);">${effectiveTaxRate.toFixed(2)}%</span>
                 </div>
               `;
               
-              log('Document information retrieved successfully', 'success');
-            }).catch(err => {
-              log(`Failed to get document info: ${err.message}`, 'error');
-            });
-          } else {
-            log('Cannot get document info - ElectronAPI not available', 'error');
+              document.getElementById('tax-results').style.display = 'block';
+              log('Tax calculation completed successfully', 'success');
+            }
           }
-        } catch (e) {
-          log(`Error retrieving document info: ${e.message}`, 'error');
         }
+      });
+      // Revenue vs Expenses Chart
+      const revenueCtx = document.getElementById('revenue-chart').getContext('2d');
+      
+      // Example data for last 6 months
+      const labels = ['October', 'November', 'December', 'January', 'February', 'March'];
+      const revenueData = [120000, 145000, 210000, 180000, 195000, 230000];
+      const expenseData = [85000, 90000, 125000, 110000, 105000, 130000];
+      const profitData = revenueData.map((rev, i) => rev - expenseData[i]);
+      
+      const revenueChart = new Chart(revenueCtx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Revenue',
+              data: revenueData,
+              backgroundColor: createGradient(revenueCtx, 'rgba(212, 180, 131, 0.8)', 'rgba(212, 180, 131, 0.2)'),
+              borderColor: '#D4B483',
+              borderWidth: 1
+            },
+            {
+              label: 'Expenses',
+              data: expenseData,
+              backgroundColor: createGradient(revenueCtx, 'rgba(107, 78, 113, 0.8)', 'rgba(107, 78, 113, 0.2)'),
+              borderColor: '#6B4E71',
+              borderWidth: 1
+            },
+            {
+              label: 'Net Profit',
+              data: profitData,
+              type: 'line',
+              fill: false,
+              borderColor: '#64B5F6',
+              tension: 0.4,
+              pointBackgroundColor: '#64B5F6',
+              pointBorderColor: '#fff',
+              pointRadius: 5
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: 'Revenue vs Expenses (Last 6 Months)',
+              color: 'rgba(255, 255, 255, 0.87)',
+              font: {
+                size: 16,
+                weight: 'bold'
+              }
+            },
+            legend: {
+              position: 'bottom'
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#D4B483',
+              callbacks: {
+                label: function(context) {
+                  return `${context.dataset.label}: ${context.parsed.y.toLocaleString()} MAD`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(255, 255, 255, 0.05)'
+              },
+              ticks: {
+                callback: function(value) {
+                  if (value >= 1000) {
+                    return (value / 1000) + 'k MAD';
+                  }
+                  return value + ' MAD';
+                }
+              }
+            },
+            x: {
+              grid: {
+                color: 'rgba(255, 255, 255, 0.05)'
+              }
+            }
+          }
+        }
+      });
+      
+      // Document Distribution Chart
+      const documentCtx = document.getElementById('document-chart').getContext('2d');
+      
+      // Example data for document types
+      const documentChart = new Chart(documentCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Invoices', 'Receipts', 'Bank Statements', 'Tax Forms', 'Other'],
+          datasets: [{
+            data: [42, 28, 15, 10, 5],
+            backgroundColor: [
+              '#D4B483',
+              '#6B4E71',
+              '#64B5F6',
+              '#4CD97B',
+              '#FFB020'
+            ],
+            borderColor: '#121212',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: 'Document Type Distribution',
+              color: 'rgba(255, 255, 255, 0.87)',
+              font: {
+                size: 16,
+                weight: 'bold'
+              }
+            },
+            legend: {
+              position: 'bottom'
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              callbacks: {
+                label: function(context) {
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const percentage = Math.round((context.parsed * 100) / total);
+                  return `${context.label}: ${context.parsed} (${percentage}%)`;
+                }
+              }
+            }
+          },
+          cutout: '60%'
+        }
+      });
+      
+      // Button event listeners
+      document.getElementById('get-app-info').addEventListener('click', () => {
+        const appInfo = document.getElementById('app-info');
+        appInfo.innerHTML = `
+          <div class="modal-card">
+            <h3>Application Information</h3>
+            <p><strong>Application:</strong> Financial Pre-Accounting Agent</p>
+            <p><strong>Version:</strong> 3.1.2</p>
+            <p><strong>Tax Rule Version:</strong> Finance Law 2025 (Law No. 60-24)</p>
+            <p><strong>Theme:</strong> Mustard Dark Theme</p>
+            
+            <h3 style="margin-top: 16px;">Version 3.1.2 Features</h3>
+            <ul>
+              <li>Completely redesigned modern interface with glassmorphism effects</li>
+              <li>New sidebar navigation with improved organization</li>
+              <li>Enhanced data visualization with interactive charts</li>
+              <li>Improved document management workflow</li>
+              <li>Integrated Finance Law 2025 tax engine</li>
+              <li>PDF reporting with custom branding</li>
+            </ul>
+          </div>
+        `;
+        log('Application information displayed', 'success');
+      });
+      
+      document.getElementById('view-logs').addEventListener('click', () => {
+        log('Log viewer accessed', 'info');
+        log('System ready - All modules loaded', 'success');
+        log('Finance Law 2025 tax engine initialized', 'success');
+        log('Document scanning module ready', 'success');
+      });
+      
+      document.getElementById('run-tax-calculation').addEventListener('click', () => {
+        const appInfo = document.getElementById('app-info');
+        appInfo.innerHTML = `
+          <div class="modal-card">
+            <h3>Tax Calculation Results</h3>
+            <p><strong>Revenue:</strong> 1,500,000 MAD</p>
+            <p><strong>Expenses:</strong> 800,000 MAD</p>
+            <p><strong>Taxable Income:</strong> 650,000 MAD</p>
+            <p><strong>Calculated Tax:</strong> 137,375 MAD</p>
+            <p><strong>Minimum Contribution:</strong> 3,750 MAD</p>
+            <p><strong>Final Tax:</strong> 137,375 MAD</p>
+            <p><strong>Effective Tax Rate:</strong> 21.13%</p>
+            
+            <p style="margin-top: 16px; font-size: 12px; color: var(--text-tertiary);">
+              * Based on Finance Law 2025 (Law No. 60-24)
+            </p>
+          </div>
+        `;
+        log('Tax calculation completed successfully', 'success');
+      });
+      
+      document.getElementById('generate-report').addEventListener('click', () => {
+        const appInfo = document.getElementById('app-info');
+        appInfo.innerHTML = `
+          <div class="modal-card">
+            <h3>Report Generated</h3>
+            <p>Financial Summary Report has been generated successfully.</p>
+            <p><strong>File:</strong> FinancialSummary_Q1_2025.pdf</p>
+            <p><strong>Location:</strong> /reports/financial/</p>
+            <p><strong>Size:</strong> 1.2 MB</p>
+            <p><strong>Report Type:</strong> Quarterly Financial Summary</p>
+            <p><strong>Period:</strong> Q1 2025 (January - March)</p>
+          </div>
+        `;
+        log('PDF report generated successfully', 'success');
+      });
+      
+      document.getElementById('document-info').addEventListener('click', () => {
+        const appInfo = document.getElementById('app-info');
+        appInfo.innerHTML = `
+          <div class="modal-card">
+            <h3>Document Information</h3>
+            <p><strong>Total Incoming Documents:</strong> 24</p>
+            <p><strong>Total Outgoing Documents:</strong> 12</p>
+            <p><strong>Main Documents Path:</strong> /documents/financial</p>
+            <p><strong>Incoming Documents Path:</strong> /documents/financial/incoming</p>
+            <p><strong>Outgoing Documents Path:</strong> /documents/financial/outgoing</p>
+            <p><strong>Last Document Scanned:</strong> invoice_2025_032.pdf</p>
+            <p><strong>Last Document Time:</strong> 2025-03-28 15:42:18</p>
+          </div>
+        `;
+        log('Document information retrieved successfully', 'success');
       });
     });
   </script>

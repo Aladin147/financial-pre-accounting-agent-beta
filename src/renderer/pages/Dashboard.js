@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { RevenueExpenseChart, DocumentDistributionChart } from '../components/charts';
 
 /**
  * Dashboard page component
@@ -55,20 +56,53 @@ function Dashboard() {
       <h1>Dashboard</h1>
       <p className="subtitle">Welcome to your Financial Pre-Accounting Dashboard</p>
       
-      <div className="grid">
-        <div className="card stats-card">
+      <div className="grid stats-grid">
+        <div className="stats-card">
           <div className="stats-value">{documents.incoming.length}</div>
           <div className="stats-label">Incoming Documents</div>
         </div>
         
-        <div className="card stats-card">
+        <div className="stats-card">
           <div className="stats-value">{documents.outgoing.length}</div>
           <div className="stats-label">Outgoing Documents</div>
         </div>
         
-        <div className="card stats-card">
+        <div className="stats-card">
           <div className="stats-value">{calculations.length}</div>
           <div className="stats-label">Tax Calculations</div>
+        </div>
+      </div>
+
+      <div className="grid charts-grid">
+        <div className="card chart-card">
+          <h2 className="card-title">Document Distribution</h2>
+          <DocumentDistributionChart 
+            data={{
+              labels: ['Incoming', 'Outgoing'],
+              values: [documents.incoming.length, documents.outgoing.length]
+            }}
+            options={{
+              centerText: {
+                value: documents.incoming.length + documents.outgoing.length,
+                label: 'Total Documents'
+              }
+            }}
+          />
+        </div>
+
+        <div className="card chart-card">
+          <h2 className="card-title">Financial Summary</h2>
+          <RevenueExpenseChart 
+            data={{
+              // Sample data - would come from actual calculations in production
+              revenue: [28000, 32000, 38000, 35000, 42000, 45000],
+              expenses: [20000, 22000, 25000, 24000, 28000, 30000]
+            }}
+            labels={['January', 'February', 'March', 'April', 'May', 'June']}
+            options={{
+              showNetProfit: true
+            }}
+          />
         </div>
       </div>
       

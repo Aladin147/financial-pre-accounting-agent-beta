@@ -4,9 +4,12 @@
  * Extracts financial information from document text using
  * regex pattern matching and heuristic analysis optimized
  * for Moroccan financial documents.
+ * 
+ * Enhanced with multi-currency detection and conversion for v3.0.0-beta
  */
 
 const { logger } = require('../logger');
+const currencyUtils = require('../currency-utils');
 
 // Regular expressions for Moroccan financial documents
 const PATTERNS = {
@@ -296,7 +299,10 @@ async function extractFinancialData(text, documentType, options = {}) {
       direction: 'unknown',
       companies: { names: [], taxIds: [] },
       confidence: 0,
-      keywords: []
+      keywords: [],
+      currencies: [],
+      primaryCurrency: 'MAD', // Default to Moroccan Dirham
+      hasForeignCurrency: false
     };
     
     // Extract the total amount
@@ -317,6 +323,57 @@ async function extractFinancialData(text, documentType, options = {}) {
     // Determine document direction (incoming/outgoing)
     result.direction = determineDocumentDirection(cleanedText);
     
+    // NEW: Detect and process currencies in the document
+    try {
+      const docWithText = { text: cleanedText };
+      const processedDoc = await currencyUtils.processCurrenciesInDocument(docWithText);
+      
+      if (processedDoc.currencies && processedDoc.currencies.length > 0) {
+        result.currencies = processedDoc.currencies;
+        result.hasForeignCurrency = processedDoc.hasForeignCurrency;
+        
+        // Determine primary currency (most frequently mentioned, or highest value)
+        if (result.currencies.length > 0) {
+          // Count occurrences of each currency
+          const currencyCounts = {};
+          result.currencies.forEach(c => {
+            currencyCounts[c.code] = (currencyCounts[c.code] || 0) + 1;
+          });
+          
+          // Find the most frequently occurring currency
+          let maxCount = 0;
+          let primaryCurrency = 'MAD';
+          
+          Object.entries(currencyCounts).forEach(([code, count]) => {
+            if (count > maxCount) {
+              maxCount = count;
+              primaryCurrency = code;
+            }
+          });
+          
+          result.primaryCurrency = primaryCurrency;
+          
+          // If total amount wasn't found by other methods, use the highest currency amount
+          if (result.amount === 0 && result.currencies.length > 0) {
+            // Find the highest amount in MAD
+            const highestAmount = result.currencies.reduce(
+              (max, curr) => Math.max(max, curr.madEquivalent), 0
+            );
+            
+            if (highestAmount > 0) {
+              result.amount = highestAmount;
+              logger.info('Using highest detected currency amount as total', { 
+                amount: highestAmount 
+              });
+            }
+          }
+        }
+      }
+    } catch (currencyError) {
+      logger.error('Error processing currencies', { error: currencyError.message });
+      // Continue with processing even if currency detection fails
+    }
+    
     // Calculate confidence score based on how many fields were extracted
     let fieldsExtracted = 0;
     fieldsExtracted += result.amount > 0 ? 1 : 0;
@@ -325,15 +382,18 @@ async function extractFinancialData(text, documentType, options = {}) {
     fieldsExtracted += result.invoiceNumber ? 1 : 0;
     fieldsExtracted += result.companies.names.length > 0 ? 1 : 0;
     fieldsExtracted += result.direction !== 'unknown' ? 1 : 0;
+    fieldsExtracted += result.currencies.length > 0 ? 1 : 0; // Add currency detection to confidence
     
     // Calculate confidence score (0-1)
-    result.confidence = fieldsExtracted / 6;
+    result.confidence = fieldsExtracted / 7; // Updated denominator with new field
     
     // Extract financial keywords
     result.keywords = extractKeywords(cleanedText);
     
     logger.info('Financial data extraction completed', { 
       amount: result.amount,
+      primaryCurrency: result.primaryCurrency,
+      hasForeignCurrency: result.hasForeignCurrency,
       confidence: result.confidence
     });
     
@@ -350,7 +410,10 @@ async function extractFinancialData(text, documentType, options = {}) {
       direction: 'unknown',
       companies: { names: [], taxIds: [] },
       confidence: 0,
-      keywords: []
+      keywords: [],
+      currencies: [],
+      primaryCurrency: 'MAD',
+      hasForeignCurrency: false
     };
   }
 }

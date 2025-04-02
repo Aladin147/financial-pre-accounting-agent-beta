@@ -6,7 +6,7 @@
 <h3 align="center">For Moroccan Companies | Finance Law 2025 (Law No. 60-24) Compliant</h3>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-v3.1.0--beta-D4B483.svg" alt="Version">
+  <img src="https://img.shields.io/badge/version-v3.1.2-D4B483.svg" alt="Version">
   <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License">
   <img src="https://img.shields.io/badge/platform-Windows%20|%20macOS%20|%20Linux-lightgrey.svg" alt="Platform">
   <img src="https://img.shields.io/badge/node-%3E%3D12.0.0-green.svg" alt="Node Requirement">
@@ -19,7 +19,7 @@
 - [Overview](#-overview)
 - [Key Features](#-key-features)
 - [Screenshots](#-screenshots)
-- [New in v3.1.0-beta](#-new-in-v310-beta)
+- [New in v3.1.2](#-new-in-v312)
 - [Getting Started](#-getting-started)
   - [System Requirements](#system-requirements)
   - [Installation](#installation)
@@ -153,60 +153,64 @@ This tool serves as a "pre-accountant" that helps businesses prepare, verify, an
 
 ---
 
-## 🚀 New in v3.1.0-beta
+## 🚀 New in v3.1.2
 
-### 🎨 Modernized Mustard Theme Interface
+### ✨ Enhanced User Interface Interactions
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/username/financial-pre-accounting-agent-beta/master/resources/images/theme-comparison.png" alt="Theme Comparison" width="80%">
-</p>
+- **Fully Functional Navigation System**:
+  - Complete sidebar menu navigation with active state tracking
+  - Dynamic page content loading on navigation
+  - Proper breadcrumb and header updates
+  - Smooth transitions between pages
 
-- **Elegant Mustard Accents** (#D4B483) replacing previous teal color scheme
-- **Extra-Dark Background** (#0a0a0a) for reduced eye strain during long sessions
-- **Optimized Color Contrast** for improved readability of financial data
-- **Subtle Card Shadows** and hover effects for visual depth
-- **Custom Color Profiles** for charts and visualizations
+- **Interactive UI Elements**:
+  - Clickable menu items for all application sections
+  - Functional header action buttons (search, notifications, settings)
+  - Interactive user profile with account information display
+  - Improved button state feedback and hover effects
 
-### 📊 Enhanced Data Visualization
+- **Advanced Tax Calculator**:
+  - Real-time tax calculation with Finance Law 2025 rules
+  - Beautiful, formatted results display
+  - Progressive tax bracket breakdown
+  - Minimum contribution verification
+  - Effective tax rate calculation
 
-- **Interactive Financial Charts** with elegant mustard-theme styling
-- **Revenue vs. Expenses Bar Chart** with net profit line overlay
-- **Document Distribution Donut Chart** for document type analysis
-- **Advanced Chart Features**:
-  - Gradient backgrounds
-  - Responsive design
-  - Interactive tooltips
-  - Animation effects
-  - Advanced filtering options
+### 📊 Dynamic Data Visualization
 
-### 💱 Multi-Currency Support
+- **Interactive Chart System**:
+  - Real-time data updates on parameter changes
+  - Tooltip enhancements with more detailed information
+  - Enhanced animation effects for better visual feedback
+  - Improved legend and axis formatting
 
-- **Automatic Currency Detection** in imported documents
-- **Support for Multiple Currencies**:
-  - Moroccan Dirham (MAD)
-  - US Dollar (USD)
-  - Euro (EUR)
-  - British Pound (GBP)
-  - And many more
-- **Currency Conversion** with up-to-date exchange rates
-- **Visual Indicators** for documents with foreign currencies
-- **Built-in Currency Converter Tool** in document manager
+- **Chart Interactions**:
+  - Hover effects for data point inspection
+  - Click interactions on chart elements
+  - Dynamic data filtering
+  - Export options for chart data and images
 
-### 📋 Document Processing Improvements
+### 💼 Improved Document Management
 
-- **45% Improved OCR Accuracy** for text extraction
-- **Enhanced Financial Data Recognition** in multiple currencies
-- **More Accurate Document Classification** using advanced algorithms
-- **Higher Confidence Scoring** for extracted data (93% average accuracy)
-- **50% Faster Batch Processing** of documents
+- **Enhanced Document Interaction**:
+  - File information display on hover
+  - Quick action buttons for common operations
+  - Better visual indicators for document status
+  - Improved sorting and filtering
 
-### 🖥 UI/UX Refinements
+### 🖥️ System Improvements
 
-- **More Responsive Interface** with reduced loading times
-- **Improved Error Handling** with user-friendly messages
-- **Streamlined Document Management Workflow**
-- **Clearer Visualization** of currency information
-- **Contextual Help System** with tooltips and guides
+- **Better Error Handling**:
+  - Improved error logging with timestamps
+  - User-friendly error messages
+  - Contextual error recovery options
+  - Detailed debugging information for developers
+
+- **Performance Optimizations**:
+  - Faster application startup
+  - More responsive UI interactions
+  - Reduced memory footprint
+  - Better resource management for large document sets
 
 ---
 
@@ -227,9 +231,9 @@ This tool serves as a "pre-accountant" that helps businesses prepare, verify, an
 
 Download the appropriate installer for your platform from the [Releases page](https://github.com/username/financial-pre-accounting-agent-beta/releases):
 
-- `financial-pre-accounting-agent-setup-3.1.0-beta.exe` for Windows
-- `Financial.Pre.Accounting.Agent-3.1.0-beta.dmg` for macOS
-- `financial-pre-accounting-agent-3.1.0-beta.AppImage` for Linux
+- `financial-pre-accounting-agent-setup-3.1.2.exe` for Windows
+- `Financial.Pre.Accounting.Agent-3.1.2.dmg` for macOS
+- `financial-pre-accounting-agent-3.1.2.AppImage` for Linux
 
 #### Option 2: Manual Installation
 
@@ -255,6 +259,8 @@ npm run start
 2. The script will automatically install dependencies and launch the application
 3. Navigate to the "Document Manager" section to begin importing your financial documents
 
+You can also use `restart-app.bat` to quickly restart the application after making changes.
+
 #### First-Time Setup Wizard
 
 When you first launch the application, you'll be guided through a setup process:
@@ -262,7 +268,7 @@ When you first launch the application, you'll be guided through a setup process:
 1. Set your company information
 2. Configure tax settings
 3. Set up document directories
-4. Choose your preferred theme (Mustard theme is default in v3.1.0-beta)
+4. Choose your preferred theme (Mustard theme is default in v3.1.2)
 5. Set up backup preferences
 
 ---
@@ -414,29 +420,34 @@ When clients use our "Accountant Handover" feature, you'll receive:
   <img src="https://raw.githubusercontent.com/username/financial-pre-accounting-agent-beta/master/resources/images/roadmap.png" alt="Development Roadmap" width="80%">
 </p>
 
-### Current: v3.1.0-beta
+### Current: v3.1.2
 
 ✅ Modernized Mustard Theme interface  
 ✅ Enhanced data visualization  
 ✅ Multi-currency support  
 ✅ Document processing improvements  
-✅ UI/UX refinements
+✅ UI/UX refinements  
+✅ Complete navigation system  
+✅ Fully functional tax calculator  
+✅ Interactive charts and visualizations  
 
-### Next: v3.2.0-beta (Q2 2025)
+### Next: v3.2.0-beta (Q3 2025)
 
 🔄 Advanced batch processing for high-volume documents  
 🔄 Cloud synchronization options  
 🔄 Machine learning improvements for data extraction  
 🔄 Enhanced VAT and tax calculation algorithms  
-🔄 Performance optimizations for large document sets
+🔄 Performance optimizations for large document sets  
+🔄 Multiple user support with role-based access  
 
-### Future: v4.0.0 (Q3 2025)
+### Future: v4.0.0 (Q4 2025)
 
 📋 Complete production-ready release  
 📋 Comprehensive documentation and tutorials  
 📋 Installer packages for all platforms  
 📋 Enhanced security features  
-📋 API for third-party integrations
+📋 API for third-party integrations  
+📋 Mobile companion app  
 
 ---
 
@@ -469,6 +480,7 @@ financial-pre-accounting-agent-beta/
 │   └── view-logs.js          # Log viewer
 ├── builds/                   # Build outputs
 ├── start-app.bat             # Quick start script for Windows
+├── restart-app.bat           # Restart application script
 ├── docs/                     # Documentation
 ├── LICENSE                   # MIT License
 ├── CONTRIBUTING.md           # Contribution guidelines
@@ -503,6 +515,28 @@ financial-pre-accounting-agent-beta/
    - Windows: `%APPDATA%\financial-pre-accounting-agent-beta\logs`
    - macOS: `~/Library/Application Support/financial-pre-accounting-agent-beta/logs`
    - Linux: `~/.local/share/financial-pre-accounting-agent-beta/logs`
+
+4. **Use the restart script**:
+   ```bash
+   ./restart-app.bat    # Windows
+   ```
+
+#### UI Elements Not Responding
+
+**Issue**: Buttons, menu items, or other UI elements aren't responding to clicks.
+
+**Solutions**:
+1. **Restart the application** using the restart-app.bat script
+
+2. **Clear application cache**:
+   ```
+   Settings → System → Clear Application Cache
+   ```
+
+3. **Check browser console** for JavaScript errors:
+   ```
+   View → Toggle Developer Tools → Console tab
+   ```
 
 #### No Documents Showing
 
@@ -711,6 +745,6 @@ The developers and contributors to this project cannot be held liable for any in
 ---
 
 <p align="center">
-  <b>Financial Pre-Accounting Manager v3.1.0-beta</b><br>
+  <b>Financial Pre-Accounting Manager v3.1.2</b><br>
   Developed with ❤️ for Moroccan businesses
 </p>

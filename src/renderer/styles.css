@@ -3,21 +3,37 @@
 */
 
 :root {
-  --primary-color: #1a73e8;
-  --primary-dark: #0d47a1;
-  --secondary-color: #34a853;
-  --accent-color: #fbbc05;
-  --danger-color: #ea4335;
-  --text-color: #202124;
-  --text-secondary: #5f6368;
-  --background-color: #ffffff;
-  --background-secondary: #f1f3f4;
-  --border-color: #dadce0;
+  /* Modern Mustard Theme Base Colors */
+  --primary-color: #D4B483;     /* Mustard primary */
+  --primary-dark: #C19A58;      /* Darker mustard */
+  --secondary-color: #8A6BBE;   /* Complementary purple (adjusted) */
+  --accent-color: #F7C948;      /* Brighter accent */
+  --danger-color: #E17F76;      /* Softer danger color */
+  
+  /* Text colors on dark background */
+  --text-color: rgba(255, 255, 255, 0.9); /* Improved contrast */
+  --text-secondary: rgba(255, 255, 255, 0.7); /* Better readability */
+  
+  /* Background colors - Modern Dark Theme */
+  --background-color: #121212;      /* Slightly softer than pure black */
+  --background-secondary: #1E1E1E;  /* Adjusted for better contrast */
+  --background-tertiary: #282828;   /* Lighter tertiary background */
+  
+  /* Borders and shadows */
+  --border-color: rgba(255, 255, 255, 0.12);
+  --box-shadow: 0 8px 16px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.2); /* More contemporary shadow */
+  
+  /* Chart colors */
+  --chart-income: #D4B483;      /* Mustard for income */
+  --chart-expense: #E17F76;     /* Soft red for expenses */
+  --chart-tax: #8A6BBE;         /* Purple for tax */
+  --chart-neutral: #E2E2E2;     /* Lighter neutral */
+  
+  /* Layout dimensions */
   --sidebar-width: 240px;
   --header-height: 60px;
   --footer-height: 40px;
   --border-radius: 8px;
-  --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
 /* Basic reset */
@@ -123,13 +139,15 @@ body {
 }
 
 .nav-link:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .nav-link.active {
-  background-color: rgba(26, 115, 232, 0.1);
+  background-color: rgba(212, 180, 131, 0.15);
   color: var(--primary-color);
   font-weight: 500;
+  border-left: 3px solid var(--primary-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .nav-icon {
@@ -212,12 +230,13 @@ body {
 
 .btn-outline {
   background-color: transparent;
-  border: 1px solid var(--primary-color);
+  border: 1.5px solid var(--primary-color);
   color: var(--primary-color);
 }
 
 .btn-outline:hover {
-  background-color: rgba(26, 115, 232, 0.1);
+  background-color: rgba(212, 180, 131, 0.15);
+  box-shadow: 0 0 8px rgba(212, 180, 131, 0.3);
 }
 
 /* Form elements */
@@ -237,12 +256,15 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 1rem;
-  transition: border-color 0.2s ease;
+  background-color: var(--background-tertiary);
+  color: var(--text-color);
+  transition: all 0.2s ease;
 }
 
 .form-control:focus {
   border-color: var(--primary-color);
   outline: none;
+  box-shadow: 0 0 0 2px rgba(212, 180, 131, 0.25);
 }
 
 .form-help {
@@ -262,13 +284,14 @@ body {
 }
 
 .loading-spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
+  border: 4px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   border-top: 4px solid var(--primary-color);
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
   margin-top: 20px;
+  box-shadow: 0 0 10px rgba(212, 180, 131, 0.3);
 }
 
 @keyframes spin {
@@ -299,20 +322,40 @@ body {
 }
 
 .table tr:hover {
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 /* Dashboard specific styles */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.stats-grid {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  margin-bottom: 30px;
+}
+
 .stats-card {
   text-align: center;
   padding: 24px;
+  background: linear-gradient(145deg, #1e1e1e, #2d2d2d);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--border-radius);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stats-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .stats-value {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 600;
   margin: 10px 0;
   color: var(--primary-color);
+  text-shadow: 0 0 10px rgba(212, 180, 131, 0.3);
 }
 
 .stats-label {
@@ -320,6 +363,67 @@ body {
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+/* Chart styles */
+.charts-grid {
+  grid-template-columns: 1fr 2fr;
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 992px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-card {
+  padding: 20px;
+  margin-bottom: 25px;
+}
+
+.chart-container {
+  position: relative;
+  height: 300px;
+  margin-top: 15px;
+}
+
+.revenue-expense-chart {
+  height: 350px;
+}
+
+.document-distribution-chart {
+  position: relative;
+  height: 350px;
+}
+
+.chart-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: var(--border-radius);
+  color: var(--text-secondary);
+}
+
+.donut-center-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.center-value {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.center-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
 }
 
 /* Document manager specific */
@@ -330,16 +434,18 @@ body {
 }
 
 .document-card {
+  background-color: var(--background-tertiary);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   padding: 16px;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .document-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25);
+  border-color: rgba(212, 180, 131, 0.3);
 }
 
 .document-icon {
@@ -391,4 +497,195 @@ body {
   .menu-toggle {
     display: block;
   }
+}
+
+/* Currency Converter Component Styles */
+.currency-converter-container {
+  background-color: var(--background-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+  max-width: 480px;
+}
+
+.converter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.converter-header h3 {
+  color: var(--primary-color);
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.exchange-rates-info {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.loading-indicator {
+  color: var(--accent-color);
+}
+
+.error-message {
+  color: var(--danger-color);
+}
+
+.rates-updated {
+  color: var(--primary-color);
+}
+
+.converter-form {
+  margin-bottom: 20px;
+}
+
+.amount-input {
+  margin-bottom: 15px;
+}
+
+.amount-input label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.amount-input input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: var(--background-tertiary);
+  color: var(--text-color);
+  transition: all 0.2s ease;
+}
+
+.amount-input input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(212, 180, 131, 0.25);
+}
+
+.currency-selectors {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.from-currency, .to-currency {
+  flex: 1;
+}
+
+.from-currency label, .to-currency label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.from-currency select, .to-currency select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: var(--background-tertiary);
+  color: var(--text-color);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+.from-currency select:focus, .to-currency select:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(212, 180, 131, 0.25);
+}
+
+.swap-button {
+  background-color: var(--background-tertiary);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1.2rem;
+  padding: 0;
+  margin-top: 22px;
+}
+
+.swap-button:hover {
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 0 8px rgba(212, 180, 131, 0.3);
+}
+
+.conversion-result {
+  background-color: var(--background-tertiary);
+  border-radius: var(--border-radius);
+  padding: 15px;
+  text-align: center;
+  border-left: 3px solid var(--primary-color);
+  box-shadow: inset 0 0 8px rgba(212, 180, 131, 0.1);
+}
+
+.result-amount {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 5px;
+}
+
+.exchange-rate-display {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Document currency tag */
+.document-currency-tag {
+  display: inline-block;
+  background-color: rgba(212, 180, 131, 0.15);
+  color: var(--primary-color);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.8rem;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  border: 1px solid rgba(212, 180, 131, 0.3);
+}
+
+.document-foreign-currency {
+  background-color: rgba(138, 107, 190, 0.15);
+  color: var(--secondary-color);
+  border-color: rgba(138, 107, 190, 0.3);
+}
+
+.currency-info-section {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px dashed var(--border-color);
+}
+
+.currency-info-title {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.currency-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }

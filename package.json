@@ -1,6 +1,6 @@
 {
   "name": "financial-pre-accounting-agent-beta",
-  "version": "3.0.0-alpha.1",
+  "version": "3.1.2",
   "description": "A cross-platform desktop application for pre-accounting management with Moroccan Finance Law 2025 compliance",
   "main": "src/main/index.js",
   "scripts": {
@@ -37,7 +37,7 @@
   "private": false,
   "dependencies": {
     "archiver": "^6.0.1",
-    "chart.js": "^4.4.3",
+    "chart.js": "^4.4.8",
     "electron-squirrel-startup": "^1.0.1",
     "electron-store": "^8.1.0",
     "exceljs": "^4.4.0",
@@ -48,7 +48,7 @@
     "pdfjs-dist": "^3.10.111",
     "pdfkit": "^0.14.0",
     "react": "^18.2.0",
-    "react-chartjs-2": "^5.2.0",
+    "react-chartjs-2": "^5.3.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-router-dom": "^6.22.3",

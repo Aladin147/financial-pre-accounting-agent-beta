@@ -22,11 +22,21 @@ contextBridge.exposeInMainWorld(
     
     // Basic version info
     getAppVersion: () => {
-      const packageInfo = require('../../package.json');
-      return {
-        version: packageInfo.version,
-        name: packageInfo.name,
-      };
+      try {
+        // Try the relative path first
+        const packageInfo = require('../../package.json');
+        return {
+          version: packageInfo.version,
+          name: packageInfo.name,
+        };
+      } catch (error) {
+        // Fallback values if package.json can't be loaded
+        console.error('Error loading package.json:', error.message);
+        return {
+          version: '3.1.0-beta',
+          name: 'Financial Pre-Accounting Agent',
+        };
+      }
     },
     
     // Tax calculations
@@ -42,6 +52,16 @@ contextBridge.exposeInMainWorld(
     getSetting: (key) => ipcRenderer.invoke('get-setting', key),
     updateSetting: (key, value) => ipcRenderer.invoke('update-setting', key, value),
     getSettingsByCategory: (category) => ipcRenderer.invoke('get-settings-by-category', category),
+    
+    // Currency related functions (enhanced in v3.1.5)
+    getExchangeRates: () => ipcRenderer.invoke('get-exchange-rates'),
+    getHistoricalExchangeRates: (date) => ipcRenderer.invoke('get-historical-exchange-rates', date),
+    convertCurrency: (amount, fromCurrency, toCurrency, date = null) => 
+      ipcRenderer.invoke('convert-currency', amount, fromCurrency, toCurrency, date),
+    detectCurrencies: (text) => ipcRenderer.invoke('detect-currencies', text),
+    processCurrenciesInDocument: (document, date = null) => 
+      ipcRenderer.invoke('process-currencies-in-document', document, date),
+    formatCurrency: (amount, currencyCode) => ipcRenderer.invoke('format-currency', amount, currencyCode),
     
     // Utility functions
     viewLogs: () => ipcRenderer.invoke('view-logs')

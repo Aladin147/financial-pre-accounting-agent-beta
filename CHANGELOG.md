@@ -5,6 +5,38 @@ All notable changes to the Financial Pre-Accounting Manager will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.2] - 2025-04-01
+
+### Added
+- Complete navigation system with full page switching functionality
+- Functional sidebar menu with active state tracking
+- Dynamic page content generation for all application sections
+- Interactive user profile with account information display
+- Fully functional tax calculator with real-time calculations
+- Restart application utility (restart-app.bat) for quick restarting
+
+### Changed
+- Enhanced UI interaction system with proper event delegation
+- Improved logging system with timestamped entries
+- Refined chart interactions with better tooltip information
+- Updated header to respond to navigation changes
+- Better formatted tax calculation results
+- Enhanced documentation with updated README
+
+### Fixed
+- Navigation issues where menu items had no effect when clicked
+- Header action buttons (search, notification, settings) not responding
+- User account section in sidebar not being interactive
+- Sidebar menu items failing to highlight active state
+- Charts not displaying interactive tooltips correctly
+- Tax calculator not showing detailed breakdown of calculations
+
+### Performance
+- Improved rendering performance for page transitions
+- Better resource management during navigation
+- Reduced unnecessary re-renders in UI components
+- Optimized event handler attachment for UI elements
+
 ## [3.1.0-beta] - 2025-04-01
 
 ### Added
@@ -103,6 +135,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Basic logging and error handling system
 - Minimal UI with core features
 
+[3.1.2]: https://github.com/username/financial-pre-accounting-agent-beta/compare/v3.1.0-beta...v3.1.2
 [3.1.0-beta]: https://github.com/username/financial-pre-accounting-agent-beta/compare/v3.0.0-beta...v3.1.0-beta
 [3.0.0-beta]: https://github.com/username/financial-pre-accounting-agent-beta/compare/v3.0.0-alpha.1...v3.0.0-beta
 [3.0.0-alpha.1]: https://github.com/username/financial-pre-accounting-agent-beta/compare/v2.0.0-beta...v3.0.0-alpha.1

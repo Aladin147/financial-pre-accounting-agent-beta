@@ -737,6 +737,140 @@ ipcMain.handle('process-batch-documents', async (event, filePaths, progressChann
   }
 });
 
+// Currency-related handlers (enhanced in v3.1.5)
+ipcMain.handle('get-exchange-rates', async () => {
+  logger.info('get-exchange-rates IPC handler called');
+  
+  try {
+    const { fetchExchangeRates } = require('../common/currency-utils');
+    const rates = await fetchExchangeRates('MAD');
+    logger.info('Exchange rates retrieved successfully');
+    return rates;
+  } catch (error) {
+    logger.error('Error fetching exchange rates', { error: error.message });
+    // Return default rates from the currency utils
+    const { DEFAULT_EXCHANGE_RATES } = require('../common/currency-utils');
+    return DEFAULT_EXCHANGE_RATES;
+  }
+});
+
+ipcMain.handle('get-historical-exchange-rates', async (event, date) => {
+  logger.info('get-historical-exchange-rates IPC handler called', { date });
+  
+  try {
+    const { fetchExchangeRates } = require('../common/currency-utils');
+    const rates = await fetchExchangeRates('MAD', date);
+    logger.info('Historical exchange rates retrieved successfully', { date });
+    return rates;
+  } catch (error) {
+    logger.error('Error fetching historical exchange rates', { 
+      error: error.message,
+      date
+    });
+    // Return default rates from the currency utils
+    const { DEFAULT_EXCHANGE_RATES } = require('../common/currency-utils');
+    return DEFAULT_EXCHANGE_RATES;
+  }
+});
+
+ipcMain.handle('convert-currency', async (event, amount, fromCurrency, toCurrency, date = null) => {
+  logger.info('convert-currency IPC handler called', { 
+    amount, 
+    fromCurrency, 
+    toCurrency,
+    date
+  });
+  
+  try {
+    const { convertCurrency } = require('../common/currency-utils');
+    const conversionResult = await convertCurrency(amount, fromCurrency, toCurrency, null, date);
+    
+    logger.info('Currency conversion successful', { 
+      fromCurrency, 
+      toCurrency, 
+      originalAmount: amount, 
+      convertedAmount: conversionResult.convertedAmount
+    });
+    
+    return conversionResult;
+  } catch (error) {
+    logger.error('Error converting currency', { 
+      error: error.message,
+      fromCurrency,
+      toCurrency,
+      amount,
+      date
+    });
+    return null;
+  }
+});
+
+ipcMain.handle('detect-currencies', async (event, text) => {
+  logger.info('detect-currencies IPC handler called');
+  
+  try {
+    const { detectCurrencies } = require('../common/currency-utils');
+    const detectedCurrencies = detectCurrencies(text);
+    
+    logger.info('Currencies detected successfully', { 
+      count: detectedCurrencies.length
+    });
+    
+    return detectedCurrencies;
+  } catch (error) {
+    logger.error('Error detecting currencies', { error: error.message });
+    return [];
+  }
+});
+
+ipcMain.handle('process-currencies-in-document', async (event, document, date = null) => {
+  logger.info('process-currencies-in-document IPC handler called');
+  
+  try {
+    const { processCurrenciesInDocument } = require('../common/currency-utils');
+    const result = await processCurrenciesInDocument(document, date);
+    
+    logger.info('Document currencies processed successfully', { 
+      hasForeignCurrency: result.hasForeignCurrency,
+      primaryCurrency: result.currencyAnalysis?.primaryCurrency
+    });
+    
+    return result;
+  } catch (error) {
+    logger.error('Error processing currencies in document', { error: error.message });
+    return {
+      ...document,
+      currencies: [],
+      hasForeignCurrency: false,
+      error: error.message,
+      currencyAnalysis: {
+        primaryCurrency: 'MAD',
+        reliable: false,
+        errorMessage: error.message
+      }
+    };
+  }
+});
+
+ipcMain.handle('format-currency', (event, amount, currencyCode) => {
+  logger.debug('format-currency IPC handler called', { 
+    amount, 
+    currencyCode 
+  });
+  
+  try {
+    const { formatCurrency } = require('../common/currency-utils');
+    return formatCurrency(amount, currencyCode);
+  } catch (error) {
+    logger.error('Error formatting currency', { 
+      error: error.message,
+      amount,
+      currencyCode
+    });
+    return `${amount} ${currencyCode}`;
+  }
+});
+
 // Utility handlers
 ipcMain.handle('view-logs', () => {
   logger.info('view-logs IPC handler called');
