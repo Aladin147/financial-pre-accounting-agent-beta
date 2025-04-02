@@ -5,6 +5,78 @@ All notable changes to the Financial Pre-Accounting Manager will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.0-dev] - Development (Unreleased)
+
+### Phase 1: Foundation Strengthening
+
+#### Code Architecture Refactoring
+- Split large files for better maintainability
+- Implemented service/provider pattern with comprehensive service architecture:
+  - Created EventBus service for application-wide event communication
+  - Added ErrorHandler with standardized error types and centralized error handling
+  - Implemented DatabaseService for encapsulated database operations
+  - Created DocumentService with improved document management capabilities
+  - Added TaxService with enhanced tax calculation and rule management
+  - Implemented ReportService for centralized report generation
+  - Added SettingsService with caching for improved performance
+  - Created ServiceRegistry to manage service lifecycles and dependencies
+- Created centralized App class for better main process organization
+- Standardized error handling throughout the application with severity levels and error types
+
+#### Advanced Data Validation & UI Improvements
+- ✅ Added "Review & Edit" screen for extracted document data
+  - Implemented DocumentReview component with comprehensive validation
+  - Created DocumentReviewPage with document listing and selection
+  - Added navigation support in Sidebar and App router
+  - Integrated with document service through IPC
+- ✅ Added visual confidence indicators for all extracted data
+  - Implemented color-coded confidence badges (high/medium/low)
+  - Added threshold-based confidence level calculation
+  - Displayed confidence scores next to each field
+- ✅ Replaced alerts with context-aware notifications
+  - Added toast notifications with auto-dismissal
+  - Implemented type-based styling (error/success)
+  - Included timestamps and clear button
+- ✅ Integrated proper form validation throughout the application
+  - Added comprehensive field validation with error messages
+  - Implemented ValidationErrors collection and display
+  - Added real-time validation feedback
+- ✅ Implemented modern design system with themed UI components
+  - Created design tokens system with comprehensive styling variables
+  - Implemented ThemeProvider with dark/light mode toggle
+  - Created reusable UI components using the theme system:
+    - Button component with multiple variants, sizes, and states
+    - Card component with configurable elevation and sections
+  - Reworked Header component with theme integration
+  - Added dark mode support with automatic preference detection
+
+#### Testing & Reliability Enhancement
+- ✅ Implemented comprehensive unit tests for tax calculation logic
+  - Created tests for CIT calculations with multiple tax brackets
+  - Added tests for VAT calculations including edge cases
+  - Implemented SSC tests with threshold validation
+  - Added test coverage for minimum contribution rules
+- ✅ Added integration tests for document processing workflows
+  - Implemented end-to-end document processing test suite
+  - Created document review workflow tests
+  - Added document batch processing tests
+  - Implemented document categorization tests
+- ✅ Implemented comprehensive error logging and diagnostics system
+  - Created LogManager service with advanced logging capabilities
+    - Context tracking with component and category-based filtering
+    - Log rotation with date-based files
+    - Performance metrics tracking and reporting
+    - Detailed system diagnostics information
+  - Implemented LogViewer UI component for in-app log analysis
+    - Interactive filtering by level, category, and component
+    - Detailed log entry inspection with expandable views
+    - Context-based highlighting and organization
+  - Added DiagnosticsPage for centralized system monitoring
+    - Real-time system information display
+    - Memory and performance tracking
+    - Integrated log viewing capabilities
+- Create automated UI tests for critical user journeys
+
 ## [3.2.0-beta] - 2025-04-02
 
 ### Added
@@ -146,6 +218,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Basic logging and error handling system
 - Minimal UI with core features
 
+[3.3.0-dev]: https://github.com/username/financial-pre-accounting-agent-beta/compare/v3.2.0-beta...HEAD
 [3.2.0-beta]: https://github.com/username/financial-pre-accounting-agent-beta/compare/v3.1.2...v3.2.0-beta
 [3.1.2]: https://github.com/username/financial-pre-accounting-agent-beta/compare/v3.1.0-beta...v3.1.2
 [3.1.0-beta]: https://github.com/username/financial-pre-accounting-agent-beta/compare/v3.0.0-beta...v3.1.0-beta
