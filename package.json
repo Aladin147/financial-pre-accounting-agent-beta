@@ -1,6 +1,6 @@
 {
   "name": "financial-pre-accounting-agent",
-  "version": "3.4.0-alpha",
+  "version": "3.4.0-beta.0",
   "description": "Pre-Accounting Manager for Moroccan Companies based on Finance Law 2025",
   "main": "main.js",
   "author": "Ahmed Mansouri",
