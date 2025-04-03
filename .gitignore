@@ -1,71 +1,91 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-
-# Diagnostic reports
-report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
 # Dependency directories
 node_modules/
-jspm_packages/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
 
-# Build outputs
-builds/
+# Build output
 dist/
+build/
 out/
+.next/
+.nuxt/
+coverage/
 
-# Environment files
+# Environment variables
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# Backups
-backups/
-
-# SQLite database files
-*.sqlite
-*.sqlite3
-*.db
-
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-._*
-
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-
-# Linux
-*~
-.directory
-.Trash-*
-
-# IDE files
+# IDE and editor files
 .idea/
 .vscode/
 *.swp
 *.swo
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+.vs/
 
-# Coverage & test outputs
-coverage/
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Debug files and directories
+.chrome/
+.vscode-test/
 .nyc_output/
 
-# Cache
-.npm
-.eslintcache
+# Testing artifacts
+/coverage
+/.nyc_output
+/cypress/videos
+/cypress/screenshots
+
+# Application specific
+/temp
+/tmp
+.cache/
+processed-documents/
+extracted-data/
+document-backups/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Large media files
+*.zip
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+*.mp4
+*.mov
+
+# Crash logs
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Electron specific
+dist/electron/*
