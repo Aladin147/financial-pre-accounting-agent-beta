@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Table Component Demo</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    
+    button {
+      padding: 8px 16px;
+      background-color: #6200ea;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+    
+    button:hover {
+      background-color: #3700b3;
+    }
+    
+    button:active {
+      background-color: #9747FF;
+    }
+    
+    .dark-mode {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+    
+    .dark-mode button {
+      background-color: #9747FF;
+    }
+    
+    .dark-mode button:hover {
+      background-color: #BB86FC;
+    }
+    
+    .mode-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <button id="toggleTheme" class="mode-toggle">Toggle Dark Mode</button>
+  <div id="app"></div>
+
+  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <script type="text/babel">
+    // Create context for theme
+    const ThemeContext = React.createContext({
+      isDarkMode: false,
+      theme: {
+        colors: {
+          primary: { 500: '#6200ea', 700: '#3700b3' },
+          secondary: { 500: '#03DAC6' },
+          error: { main: '#CF6679' },
+          bg: { 
+            default: '#f5f5f5', 
+            paper: '#ffffff',
+            card: '#ffffff'
+          },
+          text: { 
+            primary: '#1f1f1f', 
+            secondary: '#555555' 
+          }
+        },
+        borderRadius: {
+          sm: '4px',
+          md: '8px',
+          lg: '12px'
+        }
+      },
+      toggleTheme: () => {}
+    });
+
+    // ThemeProvider component
+    function ThemeProvider({ children }) {
+      const [isDarkMode, setIsDarkMode] = React.useState(false);
+      
+      const lightTheme = {
+        colors: {
+          primary: { 500: '#6200ea', 700: '#3700b3' },
+          secondary: { 500: '#03DAC6' },
+          error: { main: '#B00020' },
+          bg: { 
+            default: '#f5f5f5', 
+            paper: '#ffffff',
+            card: '#ffffff'
+          },
+          text: { 
+            primary: '#1f1f1f', 
+            secondary: '#555555' 
+          }
+        },
+        borderRadius: {
+          sm: '4px',
+          md: '8px',
+          lg: '12px'
+        }
+      };
+      
+      const darkTheme = {
+        colors: {
+          primary: { 500: '#9747FF', 700: '#6200ea' },
+          secondary: { 500: '#03DAC6' },
+          error: { main: '#CF6679' },
+          bg: { 
+            default: '#121212', 
+            paper: '#1e1e1e', 
+            card: '#2d2d2d'
+          },
+          text: { 
+            primary: '#e0e0e0', 
+            secondary: '#a0a0a0' 
+          }
+        },
+        borderRadius: {
+          sm: '4px',
+          md: '8px',
+          lg: '12px'
+        }
+      };
+      
+      const toggleTheme = () => {
+        setIsDarkMode((prev) => !prev);
+        document.body.classList.toggle('dark-mode');
+      };
+      
+      const theme = isDarkMode ? darkTheme : lightTheme;
+      
+      React.useEffect(() => {
+        const button = document.getElementById('toggleTheme');
+        if (button) {
+          button.addEventListener('click', toggleTheme);
+          return () => button.removeEventListener('click', toggleTheme);
+        }
+      }, []);
+      
+      return (
+        <ThemeContext.Provider value={{ isDarkMode, theme, toggleTheme }}>
+          {children}
+        </ThemeContext.Provider>
+      );
+    }
+    
+    // Hook to use theme context
+    function useTheme() {
+      return React.useContext(ThemeContext);
+    }
+    
+    // Demo data - simulating financial documents
+    const demoData = [
+      { id: 1, docType: 'Invoice', docNumber: 'INV-2025-001', date: '2025-04-01', amount: 1250.50, status: 'Processed', confidence: 92 },
+      { id: 2, docType: 'Receipt', docNumber: 'RCP-2025-042', date: '2025-03-28', amount: 476.25, status: 'Verified', confidence: 88 },
+      { id: 3, docType: 'Invoice', docNumber: 'INV-2025-002', date: '2025-03-15', amount: 2345.75, status: 'Pending', confidence: 76 },
+      { id: 4, docType: 'Statement', docNumber: 'STM-2025-007', date: '2025-03-31', amount: 0.00, status: 'Processed', confidence: 95 },
+      { id: 5, docType: 'Receipt', docNumber: 'RCP-2025-043', date: '2025-03-22', amount: 125.00, status: 'Verified', confidence: 91 },
+      { id: 6, docType: 'Invoice', docNumber: 'INV-2025-003', date: '2025-04-02', amount: 890.00, status: 'Pending', confidence: 82 },
+      { id: 7, docType: 'Invoice', docNumber: 'INV-2025-004', date: '2025-03-12', amount: 1675.30, status: 'Processed', confidence: 89 },
+      { id: 8, docType: 'Receipt', docNumber: 'RCP-2025-044', date: '2025-03-18', amount: 220.50, status: 'Verified', confidence: 93 },
+      { id: 9, docType: 'Statement', docNumber: 'STM-2025-008', date: '2025-03-31', amount: 0.00, status: 'Processed', confidence: 97 },
+      { id: 10, docType: 'Invoice', docNumber: 'INV-2025-005', date: '2025-03-25', amount: 3450.00, status: 'Pending', confidence: 79 },
+      { id: 11, docType: 'Receipt', docNumber: 'RCP-2025-045', date: '2025-03-20', amount: 178.25, status: 'Verified', confidence: 87 },
+      { id: 12, docType: 'Invoice', docNumber: 'INV-2025-006', date: '2025-04-03', amount: 945.75, status: 'Pending', confidence: 83 },
+      { id: 13, docType: 'Statement', docNumber: 'STM-2025-009', date: '2025-03-31', amount: 0.00, status: 'Processed', confidence: 96 },
+      { id: 14, docType: 'Receipt', docNumber: 'RCP-2025-046', date: '2025-03-29', amount: 312.40, status: 'Verified', confidence: 90 },
+      { id: 15, docType: 'Invoice', docNumber: 'INV-2025-007', date: '2025-03-17', amount: 2178.65, status: 'Pending', confidence: 81 }
+    ];
+    
+    // Column definitions
+    const columns = [
+      { 
+        id: 'id', 
+        label: 'ID', 
+        sortable: true,
+        width: '60px'
+      },
+      { 
+        id: 'docType', 
+        label: 'Document Type', 
+        sortable: true,
+        filterable: true
+      },
+      { 
+        id: 'docNumber', 
+        label: 'Document Number', 
+        sortable: true,
+        filterable: true
+      },
+      { 
+        id: 'date', 
+        label: 'Date', 
+        sortable: true,
+        filterable: true
+      },
+      { 
+        id: 'amount', 
+        label: 'Amount', 
+        sortable: true,
+        render: (value) => `$${value.toFixed(2)}`
+      },
+      { 
+        id: 'status', 
+        label: 'Status', 
+        sortable: true,
+        filterable: true,
+        render: (value) => {
+          let color;
+          switch (value) {
+            case 'Processed':
+              color = '#4CAF50'; // green
+              break;
+            case 'Verified':
+              color = '#2196F3'; // blue
+              break;
+            case 'Pending':
+              color = '#FF9800'; // orange
+              break;
+            default:
+              color = 'inherit';
+          }
+          return <span style={{ color, fontWeight: 500 }}>{value}</span>;
+        }
+      },
+      { 
+        id: 'confidence', 
+        label: 'Confidence', 
+        sortable: true,
+        render: (value) => {
+          let color;
+          if (value >= 90) {
+            color = '#4CAF50'; // green
+          } else if (value >= 80) {
+            color = '#2196F3'; // blue
+          } else {
+            color = '#FF9800'; // orange
+          }
+          
+          return (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ 
+                width: '100px', 
+                height: '8px', 
+                backgroundColor: '#e0e0e0', 
+                borderRadius: '4px', 
+                overflow: 'hidden' 
+              }}>
+                <div style={{ 
+                  width: `${value}%`, 
+                  height: '100%', 
+                  backgroundColor: color 
+                }} />
+              </div>
+              <span style={{ marginLeft: '8px' }}>{value}%</span>
+            </div>
+          );
+        }
+      }
+    ];
+    
+    // Table component (simplified version)
+    function Table({
+      data = [],
+      columns = [],
+      keyField = 'id',
+      pagination = false,
+      pageSize = 10,
+      sortable = true,
+      filterable = false,
+      selectable = false,
+      striped = true,
+      bordered = true,
+      compact = false,
+      hoverHighlight = true,
+      error = null,
+      loading = false,
+      emptyMessage = 'No data to display',
+      loadingMessage = 'Loading data...'
+    }) {
+      const { theme, isDarkMode } = useTheme();
+      
+      // State
+      const [sortColumn, setSortColumn] = React.useState(null);
+      const [sortDirection, setSortDirection] = React.useState('asc');
+      const [filters, setFilters] = React.useState({});
+      const [currentPage, setCurrentPage] = React.useState(1);
+      const [selected, setSelected] = React.useState(new Set());
+      
+      // Handle sorting
+      const handleSort = (columnId) => {
+        if (!sortable) return;
+        
+        const newDirection = columnId === sortColumn
+          ? sortDirection === 'asc' ? 'desc' : 'asc'
+          : 'asc';
+        
+        setSortColumn(columnId);
+        setSortDirection(newDirection);
+      };
+      
+      // Handle filtering
+      const handleFilter = (columnId, value) => {
+        const newFilters = { ...filters };
+        
+        if (value) {
+          newFilters[columnId] = value;
+        } else {
+          delete newFilters[columnId];
+        }
+        
+        setFilters(newFilters);
+        setCurrentPage(1);
+      };
+      
+      // Process data (sort, filter, paginate)
+      const processedData = React.useMemo(() => {
+        let result = [...data];
+        
+        // Apply filters
+        if (filterable && Object.keys(filters).length > 0) {
+          result = result.filter(row => {
+            return Object.entries(filters).every(([columnId, filterValue]) => {
+              const cellValue = row[columnId];
+              if (cellValue === null || cellValue === undefined) return false;
+              
+              const stringValue = String(cellValue).toLowerCase();
+              return stringValue.includes(String(filterValue).toLowerCase());
+            });
+          });
+        }
+        
+        // Apply sorting
+        if (sortable && sortColumn) {
+          result.sort((a, b) => {
+            const aValue = a[sortColumn];
+            const bValue = b[sortColumn];
+            
+            // Handle null/undefined values
+            if (aValue === null || aValue === undefined) return sortDirection === 'asc' ? -1 : 1;
+            if (bValue === null || bValue === undefined) return sortDirection === 'asc' ? 1 : -1;
+            
+            // Handle different data types
+            if (typeof aValue === 'number' && typeof bValue === 'number') {
+              return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+            }
+            
+            // Default string comparison
+            const aString = String(aValue).toLowerCase();
+            const bString = String(bValue).toLowerCase();
+            
+            return sortDirection === 'asc'
+              ? aString.localeCompare(bString)
+              : bString.localeCompare(aString);
+          });
+        }
+        
+        // Apply pagination
+        if (pagination) {
+          const startIndex = (currentPage - 1) * pageSize;
+          const endIndex = startIndex + pageSize;
+          result = result.slice(startIndex, endIndex);
+        }
+        
+        return result;
+      }, [data, sortable, sortColumn, sortDirection, filterable, filters, pagination, currentPage, pageSize]);
+      
+      // Calculate total pages for pagination
+      const totalPages = React.useMemo(() => {
+        if (!pagination) return 1;
+        
+        let filteredData = [...data];
+        
+        // Apply filters to calculate correct total
+        if (filterable && Object.keys(filters).length > 0) {
+          filteredData = filteredData.filter(row => {
+            return Object.entries(filters).every(([columnId, filterValue]) => {
+              const cellValue = row[columnId];
+              if (cellValue === null || cellValue === undefined) return false;
+              
+              const stringValue = String(cellValue).toLowerCase();
+              return stringValue.includes(String(filterValue).toLowerCase());
+            });
+          });
+        }
+        
+        return Math.ceil(filteredData.length / pageSize) || 1;
+      }, [data, filterable, filters, pagination, pageSize]);
+      
+      const styles = {
+        container: {
+          width: '100%',
+          overflowX: 'auto',
+          backgroundColor: isDarkMode ? theme.colors.bg.card : '#ffffff',
+          borderRadius: theme.borderRadius.md,
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.12)',
+          marginBottom: '20px'
+        },
+        table: {
+          width: '100%',
+          borderCollapse: 'collapse',
+          borderSpacing: 0,
+          fontSize: '14px'
+        },
+        th: {
+          padding: compact ? '8px 12px' : '12px 16px',
+          textAlign: 'left',
+          fontWeight: 600,
+          borderBottom: `2px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
+          backgroundColor: isDarkMode ? 'rgba(30, 30, 30, 0.95)' : 'rgba(250, 250, 250, 0.95)',
+          ...(bordered && {
+            borderRight: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'}`
+          })
+        },
+        sortableHeader: {
+          cursor: 'pointer'
+        },
+        filterInput: {
+          margin: '4px 0 0 0',
+          padding: '4px 8px',
+          width: 'calc(100% - 16px)',
+          fontSize: '12px',
+          border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'}`,
+          borderRadius: '4px',
+          backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.8)'
+        },
+        tr: (index) => ({
+          borderBottom: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'}`,
+          backgroundColor: striped && index % 2 === 1
+            ? (isDarkMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.02)')
+            : 'transparent'
+        }),
+        td: {
+          padding: compact ? '6px 12px' : '10px 16px',
+          ...(bordered && {
+            borderRight: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'}`
+          })
+        },
+        pagination: {
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '12px 16px',
+          borderTop: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
+          backgroundColor: isDarkMode ? 'rgba(30, 30, 30, 0.5)' : 'rgba(250, 250, 250, 0.5)'
+        },
+        pageControls: {
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        },
+        pageButton: {
+          padding: '4px 8px',
+          minWidth: '32px',
+          height: '32px',
+          border: 'none',
+          borderRadius: '4px',
+          backgroundColor: 'transparent',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        },
+        activePageButton: {
+          backgroundColor: theme.colors.primary[500],
+          color: '#FFFFFF',
+          fontWeight: 600
+        },
+        noDataMessage: {
+          textAlign: 'center',
+          padding: '40px 20px',
+          fontStyle: 'italic'
+        }
+      };
+      
+      return (
+        <div style={styles.container}>
+          <div style={{ position: 'relative', overflowX: 'auto' }}>
+            <table style={styles.table}>
+              <thead>
+                <tr>
+                  {columns.map((column) => (
+                    <th
+                      key={column.id}
+                      style={{
+                        ...styles.th,
+                        ...(sortable && column.sortable ? styles.sortableHeader : {}),
+                        ...(column.width ? { width: column.width } : {})
+                      }}
+                      onClick={() => column.sortable ? handleSort(column.id) : null}
+                    >
+                      <div>
+                        {column.label} 
+                        {sortable && column.sortable && (
+                          <span style={{ marginLeft: '6px' }}>
+                            {sortColumn === column.id ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'}
+                          </span>
+                        )}
+                      </div>
+                      {filterable && column.filterable && (
+                        <input
+                          type="text"
+                          placeholder={`Filter ${column.label}`}
+                          value={filters[column.id] || ''}
+                          onChange={(e) => handleFilter(column.id, e.target.value)}
+                          onClick={(e) => e.stopPropagation()}
+                          style={styles.filterInput}
+                        />
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              
+              <tbody>
+                {error && (
+                  <tr>
+                    <td colSpan={columns.length} style={{ ...styles.noDataMessage, color: theme.colors.error.main }}>
+                      {error}
+                    </td>
+                  </tr>
+                )}
+                
+                {!error && processedData.length === 0 && (
+                  <tr>
+                    <td colSpan={columns.length} style={styles.noDataMessage}>
+                      {loading ? loadingMessage : emptyMessage}
+                    </td>
+                  </tr>
+                )}
+                
+                {!error && processedData.map((row, rowIndex) => (
+                  <tr key={row[keyField]} style={styles.tr(rowIndex)}>
+                    {columns.map((column) => (
+                      <td key={`${row[keyField]}-${column.id}`} style={styles.td}>
+                        {column.render ? column.render(row[column.id], row) : row[column.id]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          
+          {pagination && (
+            <div style={styles.pagination}>
+              <div>
+                Showing {(currentPage - 1) * pageSize + 1}-{Math.min(currentPage * pageSize, data.length)} of {data.length} items
+              </div>
+              
+              <div style={styles.pageControls}>
+                {Array.from({ length: totalPages }).map((_, index) => {
+                  const page = index + 1;
+                  return (
+                    <button
+                      key={page}
+                      style={{
+                        ...styles.pageButton,
+                        ...(page === currentPage ? styles.activePageButton : {})
+                      }}
+                      onClick={() => setCurrentPage(page)}
+                      disabled={page === currentPage}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+    
+    // TableDemo Component
+    function TableDemo() {
+      const [isLoading, setIsLoading] = React.useState(false);
+      
+      const handleLoadingDemo = () => {
+        setIsLoading(true);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
+      };
+      
+      return (
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
+          <h1>Table Component Demo</h1>
+          <p>A feature-rich table component with sorting, filtering, pagination and more.</p>
+          
+          <section style={{ marginBottom: '40px' }}>
+            <h2>Basic Table</h2>
+            <Table 
+              data={demoData.slice(0, 5)} 
+              columns={columns}
+              sortable={true}
+            />
+            <p><em>A simple table with the first 5 rows of data.</em></p>
+          </section>
+          
+          <section style={{ marginBottom: '40px' }}>
+            <h2>Filtering & Sorting</h2>
+            <Table 
+              data={demoData} 
+              columns={columns}
+              sortable={true}
+              filterable={true}
+            />
+            <p><em>Try sorting columns and filtering data using the input fields.</em></p>
+          </section>
+          
+          <section style={{ marginBottom: '40px' }}>
+            <h2>Pagination</h2>
+            <Table 
+              data={demoData} 
+              columns={columns}
+              sortable={true}
+              pagination={true}
+              pageSize={5}
+            />
+            <p><em>Displaying 5 rows per page with pagination controls.</em></p>
+          </section>
+          
+          <section style={{ marginBottom: '40px' }}>
+            <h2>Style Variations</h2>
+            
+            <h3>Compact Table</h3>
+            <Table 
+              data={demoData.slice(0, 5)} 
+              columns={columns}
+              compact={true}
+            />
+            
+            <h3>No Striping</h3>
+            <Table 
+              data={demoData.slice(0, 5)} 
+              columns={columns}
+              striped={false}
+            />
+            
+            <h3>No Border</h3>
+            <Table 
+              data={demoData.slice(0, 5)} 
+              columns={columns}
+              bordered={false}
+            />
+          </section>
+          
+          <section style={{ marginBottom: '40px' }}>
+            <h2>Loading & Error States</h2>
+            
+            <div style={{ marginBottom: '10px' }}>
+              <button onClick={handleLoadingDemo}>
+                Simulate Loading
+              </button>
+            </div>
+            
+            <Table 
+              data={demoData} 
+              columns={columns}
+              loading={isLoading}
+              pagination={true}
+              pageSize={5}
+            />
+            
+            <h3>Error State</h3>
+            <Table 
+              data={demoData} 
+              columns={columns}
+              error="An error occurred while fetching data. Please try again later."
+            />
+            
+            <h3>Empty State</h3>
+            <Table 
+              data={[]} 
+              columns={columns}
+              emptyMessage="No documents found. Try adjusting your filters or uploading new documents."
+            />
+          </section>
+        </div>
+      );
+    }
+
+    // Main App
+    function App() {
+      return (
+        <ThemeProvider>
+          <TableDemo />
+        </ThemeProvider>
+      );
+    }
+
+    // Render the app
+    ReactDOM.render(<App />, document.getElementById('app'));
+  </script>
+</body>
+</html>
