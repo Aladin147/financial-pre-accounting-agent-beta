@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Switch Component Demo - Financial Pre-Accounting Agent v3.4-Beta</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Purple Theme CSS -->
+  <style>
+    /* Purple Theme CSS Variables - Based on our design system */
+    :root {
+      /* Primary Colors - Purple */
+      --primary: #9747FF;
+      --primary-light: #B47EFF;
+      --primary-dark: #7A30E0;
+      
+      /* Secondary Colors - Red */
+      --secondary: #FF4757;
+      --secondary-light: #FF6B7A;
+      --secondary-dark: #E53935;
+      
+      /* Background Colors - Deep Navy */
+      --bg-dark: #14151F;
+      --bg-card: #1D1E2D;
+      --bg-card-hover: #252738;
+      
+      /* Text Colors */
+      --text-primary: rgba(255, 255, 255, 0.92);
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --text-tertiary: rgba(255, 255, 255, 0.5);
+      
+      /* Border Colors */
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-color-hover: rgba(255, 255, 255, 0.15);
+      
+      /* Success/Error Colors */
+      --success: #4CD97B;
+      --error: #FF4757;
+      --warning: #FFC107;
+      --info: #29B6F6;
+      
+      /* Spacing */
+      --spacing-xs: 8px;
+      --spacing-sm: 12px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      
+      /* Border Radius */
+      --border-radius-sm: 6px;
+      --border-radius-md: 8px;
+      --border-radius-lg: 12px;
+      --border-radius-xl: 16px;
+      
+      /* Gradients */
+      --gradient-primary: linear-gradient(90deg, #9747FF 0%, #7A30E0 100%);
+      --gradient-card: linear-gradient(180deg, #1D1E2D 0%, #191A27 100%);
+      
+      /* Shadows */
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.4);
+      --shadow-focus: 0 0 0 3px rgba(151, 71, 255, 0.25);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
+      background: linear-gradient(135deg, #14151F 0%, #1A1B2A 50%, #181827 100%);
+      background-attachment: fixed;
+      overflow-x: hidden;
+      display: flex;
+      height: 100vh;
+    }
+    
+    /* Add subtle gradient overlay to body */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(151, 71, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 71, 87, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      background: linear-gradient(180deg, #1D1E2D 0%, #191A27 100%);
+      border-right: 1px solid var(--border-color);
+      padding: 24px 0;
+      transition: all 0.3s;
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      padding: 0 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 16px;
+    }
+    
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo-icon {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--bg-dark);
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
+      margin-right: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .logo-text h1 {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .logo-text span {
+      font-size: 10px;
+      color: var(--text-tertiary);
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    
+    .header {
+      background: linear-gradient(90deg, rgba(151, 71, 255, 0.15) 0%, rgba(151, 71, 255, 0.05) 100%);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      border-bottom: 1px solid var(--border-color);
+      backdrop-filter: blur(8px);
+    }
+    
+    .header-title {
+      display: flex;
+      align-items: center;
+    }
+    
+    .header-title h2 {
+      font-size: 18px;
+      font-weight: 600;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    /* Content */
+    .content-container {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    
+    .page-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      max-width: 700px;
+      line-height: 1.5;
+    }
+    
+    .card {
+      background: linear-gradient(145deg, rgba(29, 30, 45, 0.85), rgba(25, 26, 39, 0.95));
+      border-radius: var(--border-radius-xl);
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 24px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .card-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    
+    /* Switch Styles */
+    .switch {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    
+    .switch input {
+      position: absolute;
+      opacity: 0;
+      height: 0;
+      width: 0;
+    }
+    
+    .switch-track {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 20px;
+      border-radius: 999px;
+      background-color: rgba(255, 255, 255, 0.15);
+      transition: all 0.3s ease;
+    }
+    
+    .switch input:checked ~ .switch-track {
+      background-color: var(--primary);
+    }
+    
+    .switch-thumb {
+      position: absolute;
+      top: 50%;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: white;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      transform: translateY(-50%);
+      transition: all 0.3s ease;
+    }
+    
+    .switch input:checked ~ .switch-track .switch-thumb {
+      transform: translate(20px, -50%);
+    }
+    
+    .switch-label {
+      margin-left: 10px;
+      font-size: 14px;
+      color: var(--text-primary);
+      user-select: none;
+    }
+    
+    .switch.switch-label-start {
+      flex-direction: row-reverse;
+    }
+    
+    .switch.switch-label-start .switch-label {
+      margin-left: 0;
+      margin-right: 10px;
+    }
+    
+    .switch:hover .switch-track {
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+    
+    .switch input:checked:hover ~ .switch-track {
+      background-color: var(--primary-light);
+    }
+    
+    .switch input:disabled ~ .switch-track {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    .switch input:disabled ~ .switch-label {
+      color: var(--text-tertiary);
+      cursor: not-allowed;
+    }
+    
+    /* Switch Sizes */
+    .switch.switch-small .switch-track {
+      width: 32px;
+      height: 16px;
+    }
+    
+    .switch.switch-small .switch-thumb {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .switch.switch-small input:checked ~ .switch-track .switch-thumb {
+      transform: translate(16px, -50%);
+    }
+    
+    .switch.switch-small .switch-label {
+      font-size: 12px;
+    }
+    
+    .switch.switch-large .switch-track {
+      width: 48px;
+      height: 24px;
+    }
+    
+    .switch.switch-large .switch-thumb {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .switch.switch-large input:checked ~ .switch-track .switch-thumb {
+      transform: translate(24px, -50%);
+    }
+    
+    .switch.switch-large .switch-label {
+      font-size: 16px;
+    }
+    
+    /* Switch Colors */
+    .switch.switch-primary input:checked ~ .switch-track {
+      background-color: var(--primary);
+    }
+    
+    .switch.switch-secondary input:checked ~ .switch-track {
+      background-color: var(--secondary);
+    }
+    
+    .switch.switch-success input:checked ~ .switch-track {
+      background-color: var(--success);
+    }
+    
+    .switch.switch-error input:checked ~ .switch-track {
+      background-color: var(--error);
+    }
+    
+    .switch.switch-warning input:checked ~ .switch-track {
+      background-color: var(--warning);
+    }
+    
+    .switch.switch-info input:checked ~ .switch-track {
+      background-color: var(--info);
+    }
+    
+    /* Switch Error State */
+    .switch.switch-error .switch-track {
+      border: 1px solid var(--error);
+    }
+    
+    .switch.switch-error .switch-label {
+      color: var(--error);
+    }
+    
+    /* Form field styles */
+    .form-field {
+      margin-bottom: 20px;
+    }
+    
+    .form-field-helper-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+    
+    .form-field-error-text {
+      color: var(--error);
+    }
+    
+    /* Demo Layout */
+    .demo-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      border-radius: var(--border-radius-lg);
+      border: 1px solid var(--border-color);
+      background-color: rgba(29, 30, 45, 0.5);
+    }
+    
+    .demo-section-title {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: var(--primary-light);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+    
+    .demo-code {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: var(--border-radius-md);
+      padding: 15px;
+      margin-top: 15px;
+      font-family: monospace;
+      font-size: 13px;
+      color: var(--text-secondary);
+      overflow-x: auto;
+      white-space: pre;
+    }
+    
+    .demo-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 15px;
+    }
+    
+    .demo-column {
+      flex: 1;
+      min-width: 280px;
+    }
+    
+    .demo-button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: var(--border-radius-md);
+      cursor: pointer;
+      font-size: 14px;
+      width: fit-content;
+      transition: all 0.2s;
+    }
+    
+    .demo-button:hover {
+      background: var(--primary-light);
+    }
+    
+    .demo-button:active {
+      transform: translateY(1px);
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon">
+          <i class="fa-solid fa-calculator"></i>
+        </div>
+        <div class="logo-text">
+          <h1>Financial Agent</h1>
+          <span>v3.4-Beta</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <div class="header-title">
+        <h2>Switch Component Demo</h2>
+      </div>
+    </header>
+
+    <div class="content-container">
+      <h1 class="page-title">Switch Component</h1>
+      <p class="page-subtitle">
+        A toggle switch component that provides a visual slider for binary choices.
+        Support various states, sizes, colors, and can be easily integrated with form validation.
+      </p>
+      
+      <!-- Basic Switch -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Basic Switch Usage</h3>
+        </div>
+        <p class="card-subtitle">
+          Toggle switches provide binary choices and visually communicate the state of a setting.
+          They are designed to immediately activate or deactivate a feature.
+        </p>
+
+        <div class="demo-section">
+          <h4 class="demo-section-title">Basic Examples</h4>
+          <div class="demo-row">
+            <div class="demo-column">
+              <label class="switch">
+                <input type="checkbox">
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Unchecked Switch</span>
+              </label>
+              
+              <label class="switch">
+                <input type="checkbox" checked>
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Checked Switch</span>
+              </label>
+            </div>
+            
+            <div class="demo-column">
+              <label class="switch" id="notifications-switch">
+                <input type="checkbox" checked>
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Notifications</span>
+              </label>
+              
+              <label class="switch" id="dark-mode-switch">
+                <input type="checkbox">
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Dark Mode</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="demo-code">
+// Basic usage
+&lt;Switch
+  label="Unchecked Switch"
+  name="unchecked"
+/&gt;
+
+// Checked state
+&lt;Switch
+  label="Checked Switch"
+  name="checked"
+  defaultChecked
+/&gt;
+
+// Controlled with state
+const [notifications, setNotifications] = useState(true);
+
+&lt;Switch
+  label="Notifications"
+  name="notifications"
+  checked={notifications}
+  onChange={(e) => setNotifications(e.target.checked)}
+/&gt;
+          </div>
+        </div>
+        
+        <div class="demo-section">
+          <h4 class="demo-section-title">Switch Sizes</h4>
+          <div class="demo-row">
+            <div class="demo-column">
+              <label class="switch switch-small">
+                <input type="checkbox" checked>
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Small Switch</span>
+              </label>
+              
+              <label class="switch">
+                <input type="checkbox" checked>
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Medium Switch (Default)</span>
+              </label>
+              
+              <label class="switch switch-large">
+                <input type="checkbox" checked>
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Large Switch</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="demo-code">
+// Size variants
+&lt;Switch
+  label="Small Switch"
+  size="small"
+  name="smallSwitch"
+  defaultChecked
+/&gt;
+
+&lt;Switch
+  label="Medium Switch (Default)"
+  size="medium"
+  name="mediumSwitch"
+  defaultChecked
+/&gt;
+
+&lt;Switch
+  label="Large Switch"
+  size="large"
+  name="largeSwitch"
+  defaultChecked
+/&gt;
+          </div>
+        </div>
+      </div>
+      
+      <!-- Switch Customization -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Switch Customization</h3>
+        </div>
+        <p class="card-subtitle">
+          Switches can be customized with different colors and label placement options to fit your UI needs.
+        </p>
+
+        <div class="demo-section">
+          <h4 class="demo-section-title">Switch Colors</h4>
+          <div class="demo-row">
+            <div class="demo-column">
+              <label class="switch switch-primary">
+                <input type="checkbox" checked>
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Primary (Default)</span>
+              </label>
+              
+              <label class="switch switch-secondary">
+                <input type="checkbox" checked>
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Secondary</span>
+              </label>
+              
+              <label class="switch switch-success">
+                <input type="checkbox" checked>
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Success</span>
+              </label>
+            </div>
+            
+            <div class="demo-column">
+              <label class="switch switch-error">
+                <input type="checkbox" checked>
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Error</span>
+              </label>
+              
+              <label class="switch switch-warning">
+                <input type="checkbox" checked>
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Warning</span>
+              </label>
+              
+              <label class="switch switch-info">
+                <input type="checkbox" checked>
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Info</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="demo-code">
+// Color variants
+&lt;Switch
+  label="Primary (Default)"
+  color="primary"
+  name="primarySwitch"
+  defaultChecked
+/&gt;
+
+&lt;Switch
+  label="Success"
+  color="success"
+  name="successSwitch"
+  defaultChecked
+/&gt;
+
+// Available colors: primary, secondary, success, error, warning, info
+          </div>
+        </div>
+        
+        <div class="demo-section">
+          <h4 class="demo-section-title">Label Placement</h4>
+          <div class="demo-row">
+            <div class="demo-column">
+              <label class="switch">
+                <input type="checkbox" checked>
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Label at end (default)</span>
+              </label>
+              
+              <label class="switch switch-label-start">
+                <input type="checkbox" checked>
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Label at start</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="demo-code">
+// Label placement
+&lt;Switch
+  label="Label at end (default)"
+  labelPlacement="end"
+  name="labelEnd"
+  defaultChecked
+/&gt;
+
+&lt;Switch
+  label="Label at start"
+  labelPlacement="start"
+  name="labelStart"
+  defaultChecked
+/&gt;
+          </div>
+        </div>
+      </div>
+      
+      <!-- Switch States -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Switch States</h3>
+        </div>
+        <p class="card-subtitle">
+          Switches can be in different states: disabled, error, or success, each with a distinct visual appearance.
+        </p>
+
+        <div class="demo-section">
+          <h4 class="demo-section-title">State Examples</h4>
+          <div class="demo-row">
+            <div class="demo-column">
+              <label class="switch">
+                <input type="checkbox" disabled>
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Disabled (unchecked)</span>
+              </label>
+              
+              <label class="switch">
+                <input type="checkbox" disabled checked>
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Disabled (checked)</span>
+              </label>
+            </div>
+            
+            <div class="demo-column">
+              <label class="switch switch-error">
+                <input type="checkbox">
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Error state</span>
+              </label>
+              
+              <label class="switch switch-success">
+                <input type="checkbox" checked id="auto-save-switch">
+                <div class="switch-track">
+                  <div class="switch-thumb"></div>
+                </div>
+                <span class="switch-label">Auto save documents</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="demo-code">
+// Disabled state
+&lt;Switch
+  label="Disabled (unchecked)"
+  disabled
+  name="disabledUnchecked"
+/&gt;
+
+&lt;Switch
+  label="Disabled (checked)"
+  disabled
+  defaultChecked
+  name="disabledChecked"
+/&gt;
+
+// Error state
+&lt;Switch
+  label="Error state"
+  error
+  name="errorSwitch"
+/&gt;
+          </div>
+        </div>
+        
+        <div class="demo-section">
+          <h4 class="demo-section-title">Form Integration</h4>
+          <div class="form-field">
+            <label class="switch" id="email-updates-switch">
+              <input type="checkbox">
+              <div class="switch-track">
+                <div class="switch-thumb"></div>
+              </div>
+              <span class="switch-label">Subscribe to email updates</span>
+            </label>
+            <div class="form-field-helper-text" id="email-helper-text">
+              Subscribe to our newsletter for updates
+            </div>
+          </div>
+          
+          <button class="demo-button" id="submit-form-button">
+            Submit Form
+          </button>
+          
+          <div class="demo-code">
+// Integration with FormField
+&lt;FormField
+  helperText={emailUpdates 
+    ? "You'll receive our weekly newsletter" 
+    : "Subscribe to our newsletter for updates"}
+  error={formError}
+&gt;
+  &lt;Switch
+    label="Subscribe to email updates"
+    checked={emailUpdates}
+    onChange={handleEmailUpdatesChange}
+    name="emailUpdates"
+    error={formError}
+  /&gt;
+&lt;/FormField&gt;
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Simple JS for demo interactions -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Notifications switch
+      const notificationsSwitch = document.querySelector('#notifications-switch input');
+      notificationsSwitch.addEventListener('change', function() {
+        console.log('Notifications ' + (this.checked ? 'enabled' : 'disabled'));
+      });
+      
+      // Dark mode switch
+      const darkModeSwitch = document.querySelector('#dark-mode-switch input');
+      darkModeSwitch.addEventListener('change', function() {
+        console.log('Dark mode ' + (this.checked ? 'enabled' : 'disabled'));
+        // In a real app, we would toggle dark mode here
+      });
+      
+      // Auto save switch
+      const autoSaveSwitch = document.querySelector('#auto-save-switch');
+      autoSaveSwitch.addEventListener('change', function() {
+        console.log('Auto save ' + (this.checked ? 'enabled' : 'disabled'));
+      });
+      
+      // Email updates form validation
+      const emailUpdatesSwitch = document.querySelector('#email-updates-switch input');
+      const emailHelperText = document.getElementById('email-helper-text');
+      const submitFormButton = document.getElementById('submit-form-button');
+      
+      emailUpdatesSwitch.addEventListener('change', function() {
+        // Update helper text
+        if (this.checked) {
+          emailHelperText.textContent = "You'll receive our weekly newsletter";
+          emailHelperText.classList.remove('form-field-error-text');
+        } else {
+          emailHelperText.textContent = "Subscribe to our newsletter for updates";
+          emailHelperText.classList.remove('form-field-error-text');
+        }
+      });
+      
+      submitFormButton.addEventListener('click', function() {
+        if (!emailUpdatesSwitch.checked) {
+          // Show error state
+          emailUpdatesSwitch.parentElement.classList.add('switch-error');
+          emailHelperText.textContent = "Please subscribe to continue";
+          emailHelperText.classList.add('form-field-error-text');
+        } else {
+          // Success
+          emailUpdatesSwitch.parentElement.classList.remove('switch-error');
+          emailHelperText.textContent = "Form submitted successfully!";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
