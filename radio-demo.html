@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Radio Component Demo - Financial Pre-Accounting Agent v3.4-Beta</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Purple Theme CSS -->
+  <style>
+    /* Purple Theme CSS Variables - Based on our design system */
+    :root {
+      /* Primary Colors - Purple */
+      --primary: #9747FF;
+      --primary-light: #B47EFF;
+      --primary-dark: #7A30E0;
+      
+      /* Secondary Colors - Red */
+      --secondary: #FF4757;
+      --secondary-light: #FF6B7A;
+      --secondary-dark: #E53935;
+      
+      /* Background Colors - Deep Navy */
+      --bg-dark: #14151F;
+      --bg-card: #1D1E2D;
+      --bg-card-hover: #252738;
+      
+      /* Text Colors */
+      --text-primary: rgba(255, 255, 255, 0.92);
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --text-tertiary: rgba(255, 255, 255, 0.5);
+      
+      /* Border Colors */
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-color-hover: rgba(255, 255, 255, 0.15);
+      
+      /* Success/Error Colors */
+      --success: #4CD97B;
+      --error: #FF4757;
+      --warning: #FFC107;
+      --info: #29B6F6;
+      
+      /* Spacing */
+      --spacing-xs: 8px;
+      --spacing-sm: 12px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      
+      /* Border Radius */
+      --border-radius-sm: 6px;
+      --border-radius-md: 8px;
+      --border-radius-lg: 12px;
+      --border-radius-xl: 16px;
+      
+      /* Gradients */
+      --gradient-primary: linear-gradient(90deg, #9747FF 0%, #7A30E0 100%);
+      --gradient-card: linear-gradient(180deg, #1D1E2D 0%, #191A27 100%);
+      
+      /* Shadows */
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.4);
+      --shadow-focus: 0 0 0 3px rgba(151, 71, 255, 0.25);
+      
+      /* Component-specific */
+      --card-bg: linear-gradient(145deg, rgba(29, 30, 45, 0.85), rgba(25, 26, 39, 0.95));
+      --card-border: 1px solid rgba(255, 255, 255, 0.08);
+      --card-radius: var(--border-radius-xl);
+      --card-padding: 20px;
+      --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
+      background: linear-gradient(135deg, #14151F 0%, #1A1B2A 50%, #181827 100%);
+      background-attachment: fixed;
+      overflow-x: hidden;
+      display: flex;
+      height: 100vh;
+    }
+    
+    /* Add subtle gradient overlay to body */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(151, 71, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 71, 87, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      background: linear-gradient(180deg, #1D1E2D 0%, #191A27 100%);
+      border-right: 1px solid var(--border-color);
+      padding: 24px 0;
+      transition: all 0.3s;
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      padding: 0 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 16px;
+    }
+    
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo-icon {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--bg-dark);
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
+      margin-right: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .logo-text h1 {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .logo-text span {
+      font-size: 10px;
+      color: var(--text-tertiary);
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    
+    .header {
+      background: linear-gradient(90deg, rgba(151, 71, 255, 0.15) 0%, rgba(151, 71, 255, 0.05) 100%);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      border-bottom: 1px solid var(--border-color);
+      backdrop-filter: blur(8px);
+    }
+    
+    .header-title {
+      display: flex;
+      align-items: center;
+    }
+    
+    .header-title h2 {
+      font-size: 18px;
+      font-weight: 600;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    /* Content */
+    .content-container {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    
+    .page-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      max-width: 700px;
+      line-height: 1.5;
+    }
+    
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: var(--card-padding);
+      border: var(--card-border);
+      margin-bottom: 24px;
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .card-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    
+    /* Radio Styles */
+    .radio {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    
+    .radio input {
+      position: absolute;
+      opacity: 0;
+      height: 0;
+      width: 0;
+    }
+    
+    .radio-circle {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+    
+    .radio input:checked ~ .radio-circle {
+      border-color: var(--primary);
+    }
+    
+    .radio-dot {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      transition: all 0.2s;
+    }
+    
+    .radio input:checked ~ .radio-circle .radio-dot {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    
+    .radio-label {
+      margin-left: 10px;
+      font-size: 14px;
+      color: var(--text-primary);
+      user-select: none;
+    }
+    
+    .radio:hover .radio-circle {
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .radio input:disabled ~ .radio-circle {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.1);
+      cursor: not-allowed;
+    }
+    
+    .radio input:disabled ~ .radio-label {
+      color: var(--text-tertiary);
+      cursor: not-allowed;
+    }
+    
+    .radio input:disabled:checked ~ .radio-circle .radio-dot {
+      background-color: rgba(151, 71, 255, 0.4);
+    }
+    
+    .radio-small .radio-circle {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .radio-small .radio-dot {
+      width: 6px;
+      height: 6px;
+    }
+    
+    .radio-small .radio-label {
+      font-size: 12px;
+    }
+    
+    .radio-large .radio-circle {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .radio-large .radio-dot {
+      width: 10px;
+      height: 10px;
+    }
+    
+    .radio-large .radio-label {
+      font-size: 16px;
+    }
+    
+    .radio-error .radio-circle {
+      border-color: var(--error);
+    }
+    
+    .radio-error .radio-label {
+      color: var(--error);
+    }
+    
+    .radio-success .radio-circle {
+      border-color: var(--success);
+    }
+    
+    .radio-success .radio-label {
+      color: var(--success);
+    }
+    
+    /* RadioGroup Styles */
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+    
+    .radio-group-label {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+    
+    .radio-group-horizontal {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    
+    .radio-group-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .radio-group-horizontal .radio-group-options {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    
+    .radio-group-error .radio-group-label {
+      color: var(--error);
+    }
+    
+    /* Demo Layout */
+    .demo-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      border-radius: var(--border-radius-lg);
+      border: 1px solid var(--border-color);
+      background-color: rgba(29, 30, 45, 0.5);
+    }
+    
+    .demo-section-title {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: var(--primary-light);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+    
+    .demo-code {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: var(--border-radius-md);
+      padding: 15px;
+      margin-top: 15px;
+      font-family: monospace;
+      font-size: 13px;
+      color: var(--text-secondary);
+      overflow-x: auto;
+      white-space: pre;
+    }
+    
+    .demo-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 15px;
+    }
+    
+    .demo-column {
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    /* Form field styles */
+    .form-field {
+      margin-bottom: 20px;
+    }
+    
+    .form-field-label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    
+    .form-field-helper-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+    
+    .form-field-error-text {
+      color: var(--error);
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon">
+          <i class="fa-solid fa-calculator"></i>
+        </div>
+        <div class="logo-text">
+          <h1>Financial Agent</h1>
+          <span>v3.4-Beta</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <div class="header-title">
+        <h2>Radio Component Demo</h2>
+      </div>
+    </header>
+
+    <div class="content-container">
+      <h1 class="page-title">Radio & RadioGroup</h1>
+      <p class="page-subtitle">
+        Highly customizable radio button components with support for various states including
+        checked, unchecked, disabled, and error states. The RadioGroup component
+        provides functionality for managing related radio options with both vertical and horizontal layouts.
+      </p>
+      
+      <!-- Basic Radio -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Basic Radio Usage</h3>
+        </div>
+        <p class="card-subtitle">
+          Radio buttons allow users to select a single option from a set. They follow a mutually exclusive pattern where only one option can be selected at a time.
+        </p>
+
+        <div class="demo-section">
+          <h4 class="demo-section-title">Radio States</h4>
+          <div class="demo-row">
+            <div class="demo-column">
+              <label class="radio">
+                <input type="radio" name="demo_radio">
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <span class="radio-label">Unchecked Radio</span>
+              </label>
+              
+              <label class="radio">
+                <input type="radio" name="demo_radio" checked>
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <span class="radio-label">Checked Radio</span>
+              </label>
+            </div>
+            
+            <div class="demo-column">
+              <label class="radio">
+                <input type="radio" name="disabled_radio" disabled>
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <span class="radio-label">Disabled Radio</span>
+              </label>
+              
+              <label class="radio">
+                <input type="radio" name="disabled_radio" disabled checked>
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <span class="radio-label">Disabled Checked Radio</span>
+              </label>
+              
+              <label class="radio radio-error">
+                <input type="radio" name="state_radio">
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <span class="radio-label">Error State</span>
+              </label>
+              
+              <label class="radio radio-success">
+                <input type="radio" name="state_radio" checked>
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <span class="radio-label">Success State</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="demo-code">
+// Basic usage
+&lt;Radio
+  label="Unchecked Radio"
+  name="demo_radio"
+  value="unchecked"
+/&gt;
+
+// Checked radio
+&lt;Radio
+  label="Checked Radio"
+  name="demo_radio"
+  value="checked"
+  checked
+/&gt;
+
+// Error and success states
+&lt;Radio
+  label="Error State"
+  error
+  name="state_radio"
+  value="error"
+/&gt;
+
+&lt;Radio
+  label="Success State"
+  success
+  name="state_radio"
+  value="success"
+  checked
+/&gt;
+          </div>
+        </div>
+        
+        <div class="demo-section">
+          <h4 class="demo-section-title">Radio Sizes</h4>
+          <div class="demo-row">
+            <div class="demo-column">
+              <label class="radio radio-small">
+                <input type="radio" name="size_radio">
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <span class="radio-label">Small Radio</span>
+              </label>
+              
+              <label class="radio">
+                <input type="radio" name="size_radio" checked>
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <span class="radio-label">Medium Radio (Default)</span>
+              </label>
+              
+              <label class="radio radio-large">
+                <input type="radio" name="size_radio">
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <span class="radio-label">Large Radio</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="demo-code">
+// Size variants
+&lt;Radio
+  label="Small Radio"
+  size="small"
+  name="size_radio"
+  value="small"
+/&gt;
+
+&lt;Radio
+  label="Medium Radio (Default)"
+  size="medium"
+  name="size_radio"
+  value="medium"
+  checked
+/&gt;
+
+&lt;Radio
+  label="Large Radio"
+  size="large"
+  name="size_radio"
+  value="large"
+/&gt;
+          </div>
+        </div>
+      </div>
+      
+      <!-- Radio Group -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">RadioGroup Component</h3>
+        </div>
+        <p class="card-subtitle">
+          The RadioGroup component manages a group of related radio buttons, handling selection state and layout direction.
+        </p>
+
+        <div class="demo-section">
+          <h4 class="demo-section-title">Vertical RadioGroup</h4>
+          <div class="radio-group">
+            <label class="radio-group-label">Gender</label>
+            
+            <div class="radio-group-options">
+              <label class="radio">
+                <input type="radio" name="gender" value="male">
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <span class="radio-label">Male</span>
+              </label>
+              
+              <label class="radio">
+                <input type="radio" name="gender" value="female" checked>
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <span class="radio-label">Female</span>
+              </label>
+              
+              <label class="radio">
+                <input type="radio" name="gender" value="other">
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <span class="radio-label">Other/Non-binary</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="demo-code">
+// Vertical RadioGroup
+const [selectedGender, setSelectedGender] = useState('female');
+
+const genderOptions = [
+  { value: 'male', label: 'Male' },
+  { value: 'female', label: 'Female' },
+  { value: 'other', label: 'Other/Non-binary' }
+];
+
+&lt;RadioGroup
+  name="gender"
+  label="Gender"
+  options={genderOptions}
+  value={selectedGender}
+  onChange={setSelectedGender}
+/&gt;
+          </div>
+        </div>
+        
+        <div class="demo-section">
+          <h4 class="demo-section-title">Horizontal RadioGroup</h4>
+          <div class="radio-group radio-group-horizontal">
+            <label class="radio-group-label">Payment Method</label>
+            
+            <div class="radio-group-options">
+              <label class="radio">
+                <input type="radio" name="payment" value="card" checked>
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <span class="radio-label">Credit Card</span>
+              </label>
+              
+              <label class="radio">
+                <input type="radio" name="payment" value="bank">
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <span class="radio-label">Bank Transfer</span>
+              </label>
+              
+              <label class="radio">
+                <input type="radio" name="payment" value="paypal">
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <span class="radio-label">PayPal</span>
+              </label>
+              
+              <label class="radio">
+                <input type="radio" name="payment" value="crypto">
+                <div class="radio-circle">
+                  <div class="radio-dot"></div>
+                </div>
+                <span class="radio-label">Cryptocurrency</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="demo-code">
+// Horizontal RadioGroup
+const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
+
+const paymentMethodOptions = [
+  { value: 'card', label: 'Credit Card' },
+  { value: 'bank', label: 'Bank Transfer' },
+  { value: 'paypal', label: 'PayPal' },
+  { value: 'crypto', label: 'Cryptocurrency' }
+];
+
+&lt;RadioGroup
+  name="payment_method"
+  label="Payment Method"
+  options={paymentMethodOptions}
+  value={selectedPaymentMethod}
+  onChange={setSelectedPaymentMethod}
+  direction="horizontal"
+  spacing="lg"
+/&gt;
+          </div>
+        </div>
+        
+        <div class="demo-section">
+          <h4 class="demo-section-title">Integration with FormField</h4>
+          <div class="form-field">
+            <label class="form-field-label">Select a subscription plan</label>
+            
+            <div class="radio-group radio-group-error">
+              <div class="radio-group-options">
+                <label class="radio">
+                  <input type="radio" name="plan" value="basic">
+                  <div class="radio-circle">
+                    <div class="radio-dot"></div>
+                  </div>
+                  <span class="radio-label">Basic Plan - $9.99/month</span>
+                </label>
+                
+                <label class="radio">
+                  <input type="radio" name="plan" value="pro">
+                  <div class="radio-circle">
+                    <div class="radio-dot"></div>
+                  </div>
+                  <span class="radio-label">Pro Plan - $19.99/month</span>
+                </label>
+                
+                <label class="radio">
+                  <input type="radio" name="plan" value="enterprise" disabled>
+                  <div class="radio-circle">
+                    <div class="radio-dot"></div>
+                  </div>
+                  <span class="radio-label">Enterprise Plan - $49.99/month</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="form-field-helper-text form-field-error-text">
+              Please select a subscription plan to continue
+            </div>
+          </div>
+          
+          <div class="demo-code">
+// Integration with FormField for validation
+const [selectedPlan, setSelectedPlan] = useState('');
+const [formError, setFormError] = useState(true);
+
+const planOptions = [
+  { value: 'basic', label: 'Basic Plan - $9.99/month' },
+  { value: 'pro', label: 'Pro Plan - $19.99/month' },
+  { value: 'enterprise', label: 'Enterprise Plan - $49.99/month', disabled: true }
+];
+
+const handlePlanChange = (value) => {
+  setSelectedPlan(value);
+  setFormError(value === '');
+};
+
+&lt;FormField
+  label="Select a subscription plan"
+  helperText={formError ? "Please select a subscription plan to continue" : "You selected a plan successfully"}
+  error={formError}
+&gt;
+  &lt;RadioGroup
+    name="plan"
+    value={selectedPlan}
+    onChange={handlePlanChange}
+    options={planOptions}
+    error={formError}
+  /&gt;
+&lt;/FormField&gt;
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Simple JS for demo interactions -->
+  <script>
+    // Add interactive demos if needed
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set up interactive demo functionality here
+    });
+  </script>
+</body>
+</html>
