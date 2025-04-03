@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkbox Component Demo - Financial Pre-Accounting Agent v3.4-Beta</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Purple Theme CSS -->
+  <style>
+    /* Purple Theme CSS Variables - Based on our design system */
+    :root {
+      /* Primary Colors - Purple */
+      --primary: #9747FF;
+      --primary-light: #B47EFF;
+      --primary-dark: #7A30E0;
+      
+      /* Secondary Colors - Red */
+      --secondary: #FF4757;
+      --secondary-light: #FF6B7A;
+      --secondary-dark: #E53935;
+      
+      /* Background Colors - Deep Navy */
+      --bg-dark: #14151F;
+      --bg-card: #1D1E2D;
+      --bg-card-hover: #252738;
+      
+      /* Text Colors */
+      --text-primary: rgba(255, 255, 255, 0.92);
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --text-tertiary: rgba(255, 255, 255, 0.5);
+      
+      /* Border Colors */
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-color-hover: rgba(255, 255, 255, 0.15);
+      
+      /* Success/Error Colors */
+      --success: #4CD97B;
+      --error: #FF4757;
+      --warning: #FFC107;
+      --info: #29B6F6;
+      
+      /* Spacing */
+      --spacing-xs: 8px;
+      --spacing-sm: 12px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      
+      /* Border Radius */
+      --border-radius-sm: 6px;
+      --border-radius-md: 8px;
+      --border-radius-lg: 12px;
+      --border-radius-xl: 16px;
+      
+      /* Gradients */
+      --gradient-primary: linear-gradient(90deg, #9747FF 0%, #7A30E0 100%);
+      --gradient-card: linear-gradient(180deg, #1D1E2D 0%, #191A27 100%);
+      
+      /* Shadows */
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.4);
+      --shadow-focus: 0 0 0 3px rgba(151, 71, 255, 0.25);
+      
+      /* Component-specific */
+      --card-bg: linear-gradient(145deg, rgba(29, 30, 45, 0.85), rgba(25, 26, 39, 0.95));
+      --card-border: 1px solid rgba(255, 255, 255, 0.08);
+      --card-radius: var(--border-radius-xl);
+      --card-padding: 20px;
+      --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
+      background: linear-gradient(135deg, #14151F 0%, #1A1B2A 50%, #181827 100%);
+      background-attachment: fixed;
+      overflow-x: hidden;
+      display: flex;
+      height: 100vh;
+    }
+    
+    /* Add subtle gradient overlay to body */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(151, 71, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 71, 87, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      background: linear-gradient(180deg, #1D1E2D 0%, #191A27 100%);
+      border-right: 1px solid var(--border-color);
+      padding: 24px 0;
+      transition: all 0.3s;
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      padding: 0 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 16px;
+    }
+    
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo-icon {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--bg-dark);
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
+      margin-right: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .logo-text h1 {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .logo-text span {
+      font-size: 10px;
+      color: var(--text-tertiary);
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    
+    .header {
+      background: linear-gradient(90deg, rgba(151, 71, 255, 0.15) 0%, rgba(151, 71, 255, 0.05) 100%);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      border-bottom: 1px solid var(--border-color);
+      backdrop-filter: blur(8px);
+    }
+    
+    .header-title {
+      display: flex;
+      align-items: center;
+    }
+    
+    .header-title h2 {
+      font-size: 18px;
+      font-weight: 600;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    /* Content */
+    .content-container {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    
+    .page-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      max-width: 700px;
+      line-height: 1.5;
+    }
+    
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      padding: var(--card-padding);
+      border: var(--card-border);
+      margin-bottom: 24px;
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .card-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    
+    /* Checkbox Styles */
+    .checkbox {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    
+    .checkbox input {
+      position: absolute;
+      opacity: 0;
+      height: 0;
+      width: 0;
+    }
+    
+    .checkbox-box {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--border-radius-sm);
+      transition: all 0.2s;
+    }
+    
+    .checkbox input:checked ~ .checkbox-box {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+    
+    .checkbox-icon {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.2s;
+    }
+    
+    .checkbox input:checked ~ .checkbox-box .checkbox-icon {
+      opacity: 1;
+      transform: scale(1);
+    }
+    
+    .checkbox-label {
+      margin-left: 10px;
+      font-size: 14px;
+      color: var(--text-primary);
+      user-select: none;
+    }
+    
+    .checkbox:hover .checkbox-box {
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .checkbox input:disabled ~ .checkbox-box {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.1);
+      cursor: not-allowed;
+    }
+    
+    .checkbox input:disabled ~ .checkbox-label {
+      color: var(--text-tertiary);
+      cursor: not-allowed;
+    }
+    
+    .checkbox-indeterminate .checkbox-box::after {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 2px;
+      background-color: white;
+      border-radius: 1px;
+    }
+    
+    .checkbox-small .checkbox-box {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .checkbox-large .checkbox-box {
+      width: 24px;
+      height: 24px;
+    }
+    
+    /* Checkbox Group Styles */
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+    
+    .checkbox-group-label {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+    
+    .checkbox-group-horizontal {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    
+    .checkbox-group-options {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .checkbox-group-horizontal .checkbox-group-options {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    
+    .checkbox-error .checkbox-box {
+      border-color: var(--error);
+    }
+    
+    .checkbox-error .checkbox-label {
+      color: var(--error);
+    }
+    
+    .checkbox-success .checkbox-box {
+      border-color: var(--success);
+    }
+    
+    .checkbox-success .checkbox-label {
+      color: var(--success);
+    }
+    
+    /* Demo Layout */
+    .demo-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      border-radius: var(--border-radius-lg);
+      border: 1px solid var(--border-color);
+      background-color: rgba(29, 30, 45, 0.5);
+    }
+    
+    .demo-section-title {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: var(--primary-light);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+    
+    .demo-code {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: var(--border-radius-md);
+      padding: 15px;
+      margin-top: 15px;
+      font-family: monospace;
+      font-size: 13px;
+      color: var(--text-secondary);
+      overflow-x: auto;
+      white-space: pre;
+    }
+    
+    .demo-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 15px;
+    }
+    
+    .demo-column {
+      flex: 1;
+      min-width: 300px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon">
+          <i class="fa-solid fa-calculator"></i>
+        </div>
+        <div class="logo-text">
+          <h1>Financial Agent</h1>
+          <span>v3.4-Beta</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <div class="header-title">
+        <h2>Checkbox Component Demo</h2>
+      </div>
+    </header>
+
+    <div class="content-container">
+      <h1 class="page-title">Checkbox & CheckboxGroup</h1>
+      <p class="page-subtitle">
+        Highly customizable checkbox components with support for various states including
+        checked, unchecked, indeterminate, disabled, and error states. The CheckboxGroup component
+        provides functionality for managing groups of related checkboxes with support for
+        select all functionality.
+      </p>
+      
+      <!-- Basic Checkbox -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Basic Checkbox Usage</h3>
+        </div>
+        <p class="card-subtitle">
+          Checkboxes can be used individually or in groups. They support various states like checked, unchecked, indeterminate, disabled, and error states.
+        </p>
+
+        <div class="demo-section">
+          <h4 class="demo-section-title">Checkbox States</h4>
+          <div class="demo-row">
+            <div class="demo-column">
+              <label class="checkbox">
+                <input type="checkbox">
+                <div class="checkbox-box">
+                  <span class="checkbox-icon">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label">Basic Checkbox</span>
+              </label>
+              
+              <label class="checkbox">
+                <input type="checkbox" checked>
+                <div class="checkbox-box">
+                  <span class="checkbox-icon">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label">Checked Checkbox</span>
+              </label>
+              
+              <label class="checkbox checkbox-indeterminate">
+                <input type="checkbox">
+                <div class="checkbox-box" style="background-color: #9747FF; border-color: #9747FF;">
+                  <span class="checkbox-icon" style="opacity: 1; transform: scale(1);">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label">Indeterminate Checkbox</span>
+              </label>
+            </div>
+            
+            <div class="demo-column">
+              <label class="checkbox">
+                <input type="checkbox" disabled>
+                <div class="checkbox-box">
+                  <span class="checkbox-icon">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label">Disabled Checkbox</span>
+              </label>
+              
+              <label class="checkbox">
+                <input type="checkbox" disabled checked>
+                <div class="checkbox-box" style="opacity: 0.6; background-color: #9747FF; border-color: #9747FF;">
+                  <span class="checkbox-icon" style="opacity: 1; transform: scale(1);">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label">Disabled Checked</span>
+              </label>
+              
+              <label class="checkbox checkbox-error">
+                <input type="checkbox">
+                <div class="checkbox-box">
+                  <span class="checkbox-icon">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label">Error State</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="demo-code">
+// Basic usage
+&lt;Checkbox
+  label="Basic Checkbox"
+  name="basic"
+  onChange={handleChange}
+/&gt;
+
+// Indeterminate state
+&lt;Checkbox
+  label="Select All"
+  indeterminate={someSelected && !allSelected}
+  checked={allSelected}
+  onChange={handleSelectAll}
+/&gt;
+          </div>
+        </div>
+        
+        <div class="demo-section">
+          <h4 class="demo-section-title">Checkbox Sizes</h4>
+          <div class="demo-row">
+            <div class="demo-column">
+              <label class="checkbox checkbox-small">
+                <input type="checkbox">
+                <div class="checkbox-box" style="width: 16px; height: 16px;">
+                  <span class="checkbox-icon">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label" style="font-size: 12px;">Small Checkbox</span>
+              </label>
+              
+              <label class="checkbox">
+                <input type="checkbox">
+                <div class="checkbox-box">
+                  <span class="checkbox-icon">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label">Medium Checkbox (Default)</span>
+              </label>
+              
+              <label class="checkbox checkbox-large">
+                <input type="checkbox">
+                <div class="checkbox-box" style="width: 24px; height: 24px;">
+                  <span class="checkbox-icon">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label" style="font-size: 16px;">Large Checkbox</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="demo-code">
+// Size variants
+&lt;Checkbox
+  label="Small Checkbox"
+  size="small"
+/&gt;
+
+&lt;Checkbox
+  label="Medium Checkbox (Default)"
+  size="medium"
+/&gt;
+
+&lt;Checkbox
+  label="Large Checkbox"
+  size="large"
+/&gt;
+          </div>
+        </div>
+      </div>
+      
+      <!-- Checkbox Group -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">CheckboxGroup Component</h3>
+        </div>
+        <p class="card-subtitle">
+          The CheckboxGroup component manages a group of related checkboxes, handling selection state and providing select all functionality.
+        </p>
+
+        <div class="demo-section">
+          <h4 class="demo-section-title">Vertical CheckboxGroup</h4>
+          <div class="checkbox-group">
+            <label class="checkbox-group-label">Notification Preferences</label>
+            
+            <div class="checkbox-group-select-all">
+              <label class="checkbox">
+                <input type="checkbox">
+                <div class="checkbox-box">
+                  <span class="checkbox-icon">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label">Select all notification methods</span>
+              </label>
+            </div>
+            
+            <div class="checkbox-group-options">
+              <label class="checkbox">
+                <input type="checkbox" checked>
+                <div class="checkbox-box">
+                  <span class="checkbox-icon">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label">Email notifications</span>
+              </label>
+              
+              <label class="checkbox">
+                <input type="checkbox">
+                <div class="checkbox-box">
+                  <span class="checkbox-icon">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label">SMS notifications</span>
+              </label>
+              
+              <label class="checkbox">
+                <input type="checkbox">
+                <div class="checkbox-box">
+                  <span class="checkbox-icon">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label">Push notifications</span>
+              </label>
+              
+              <label class="checkbox">
+                <input type="checkbox">
+                <div class="checkbox-box">
+                  <span class="checkbox-icon">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label">Browser notifications</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="demo-code">
+// Vertical CheckboxGroup with select all
+const [notifications, setNotifications] = useState(['email']);
+
+const notificationOptions = [
+  { value: 'email', label: 'Email notifications' },
+  { value: 'sms', label: 'SMS notifications' },
+  { value: 'push', label: 'Push notifications' },
+  { value: 'browser', label: 'Browser notifications' }
+];
+
+&lt;CheckboxGroup
+  name="notifications"
+  label="Notification Preferences"
+  options={notificationOptions}
+  value={notifications}
+  onChange={setNotifications}
+  selectAllOption="Select all notification methods"
+/&gt;
+          </div>
+        </div>
+        
+        <div class="demo-section">
+          <h4 class="demo-section-title">Horizontal CheckboxGroup</h4>
+          <div class="checkbox-group checkbox-group-horizontal">
+            <label class="checkbox-group-label">Select Features</label>
+            
+            <div class="checkbox-group-options">
+              <label class="checkbox">
+                <input type="checkbox" checked>
+                <div class="checkbox-box">
+                  <span class="checkbox-icon">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label">Interactive Charts</span>
+              </label>
+              
+              <label class="checkbox">
+                <input type="checkbox" checked>
+                <div class="checkbox-box">
+                  <span class="checkbox-icon">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label">Export to PDF</span>
+              </label>
+              
+              <label class="checkbox">
+                <input type="checkbox">
+                <div class="checkbox-box">
+                  <span class="checkbox-icon">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                </div>
+                <span class="checkbox-label">API Access</span>
+              </label>
+              
+              <label class="checkbox">
+                <input type="checkbox">
+                <div class="checkbox-box">
+                  <span class="checkbox-icon">
+                    <svg viewBox="0 0 24 24" width="70%" height="70%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline
