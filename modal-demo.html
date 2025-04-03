@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modal Component Demo</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    
+    button {
+      padding: 8px 16px;
+      background-color: #6200ea;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+    
+    button:hover {
+      background-color: #3700b3;
+    }
+    
+    button:active {
+      background-color: #9747FF;
+    }
+    
+    .dark-mode {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+    
+    .dark-mode button {
+      background-color: #9747FF;
+    }
+    
+    .dark-mode button:hover {
+      background-color: #BB86FC;
+    }
+    
+    .mode-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    section {
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      margin-top: 0;
+      padding-top: 20px;
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .result-box {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 4px;
+      display: none;
+    }
+
+    .result-confirmed {
+      background-color: #e6f7e6;
+      border: 1px solid #a3cfbb;
+    }
+
+    .result-cancelled {
+      background-color: #f7e6e6;
+      border: 1px solid #cfb3a3;
+    }
+
+    .form-field {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 4px;
+      border: 1px solid #ced4da;
+      box-sizing: border-box;
+    }
+
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .demo-box {
+      height: 100px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 16px 0;
+    }
+
+    .demo-box-large {
+      height: 200px;
+    }
+  </style>
+</head>
+<body>
+  <button id="toggleTheme" class="mode-toggle">Toggle Dark Mode</button>
+  <div id="app"></div>
+
+  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <script type="text/babel">
+    // Create context for theme
+    const ThemeContext = React.createContext({
+      isDarkMode: false,
+      theme: {
+        colors: {
+          primary: { 500: '#6200ea', 700: '#3700b3' },
+          secondary: { 500: '#03DAC6' },
+          error: { main: '#CF6679' },
+          bg: { 
+            default: '#f5f5f5', 
+            paper: '#ffffff',
+            card: '#ffffff'
+          },
+          text: { 
+            primary: '#1f1f1f', 
+            secondary: '#555555' 
+          }
+        },
+        borderRadius: {
+          sm: '4px',
+          md: '8px',
+          lg: '12px'
+        }
+      },
+      toggleTheme: () => {}
+    });
+
+    // ThemeProvider component
+    function ThemeProvider({ children }) {
+      const [isDarkMode, setIsDarkMode] = React.useState(false);
+      
+      const lightTheme = {
+        colors: {
+          primary: { 500: '#6200ea', 700: '#3700b3' },
+          secondary: { 500: '#03DAC6' },
+          error: { main: '#B00020' },
+          bg: { 
+            default: '#f5f5f5', 
+            paper: '#ffffff',
+            card: '#ffffff'
+          },
+          text: { 
+            primary: '#1f1f1f', 
+            secondary: '#555555' 
+          }
+        },
+        borderRadius: {
+          sm: '4px',
+          md: '8px',
+          lg: '12px'
+        }
+      };
+      
+      const darkTheme = {
+        colors: {
+          primary: { 500: '#9747FF', 700: '#6200ea' },
+          secondary: { 500: '#03DAC6' },
+          error: { main: '#CF6679' },
+          bg: { 
+            default: '#121212', 
+            paper: '#1e1e1e', 
+            card: '#2d2d2d'
+          },
+          text: { 
+            primary: '#e0e0e0', 
+            secondary: '#a0a0a0' 
+          }
+        },
+        borderRadius: {
+          sm: '4px',
+          md: '8px',
+          lg: '12px'
+        }
+      };
+      
+      const toggleTheme = () => {
+        setIsDarkMode((prev) => !prev);
+        document.body.classList.toggle('dark-mode');
+      };
+      
+      const theme = isDarkMode ? darkTheme : lightTheme;
+      
+      React.useEffect(() => {
+        const button = document.getElementById('toggleTheme');
+        if (button) {
+          button.addEventListener('click', toggleTheme);
+          return () => button.removeEventListener('click', toggleTheme);
+        }
+      }, []);
+      
+      return (
+        <ThemeContext.Provider value={{ isDarkMode, theme, toggleTheme }}>
+          {children}
+        </ThemeContext.Provider>
+      );
+    }
+    
+    // Hook to use theme context
+    function useTheme() {
+      return React.useContext(ThemeContext);
+    }
+    
+    // Modal Component
+    function Modal({
+      // Content
+      children,
+      title,
+      footer,
+      
+      // State
+      isOpen = false,
+      onClose = () => {},
+      
+      // Size and Position
+      size = 'medium',
+      centered = false,
+      fullWidth = false,
+      
+      // Behavior
+      closeOnBackdropClick = true,
+      closeOnEscape = true,
+      showCloseButton = true,
+      
+      // Animation
+      animationDuration = 300,
+      
+      // Accessibility
+      ariaLabelledBy,
+      ariaDescribedBy,
+      
+      // Styling
+      className = '',
+      contentClassName = '',
+      headerClassName = '',
+      footerClassName = '',
+      backdropClassName = '',
+      closeButtonClassName = '',
+      
+      // Additional props
+      id,
+      style = {},
+      ...rest
+    }) {
+      const { theme, isDarkMode } = useTheme();
+      const [isAnimating, setIsAnimating] = React.useState(false);
+      const [isVisible, setIsVisible] = React.useState(false);
+      const modalRef = React.useRef(null);
+      const previousActiveElement = React.useRef(null);
+      
+      // Handle modal opening and closing
+      React.useEffect(() => {
+        if (isOpen && !isVisible) {
+          // Save previously focused element to restore it when modal closes
+          previousActiveElement.current = document.activeElement;
+          
+          // Start opening animation
+          setIsAnimating(true);
+          setIsVisible(true);
+          
+          // Focus the modal after animation
+          setTimeout(() => {
+            setIsAnimating(false);
+            if (modalRef.current) {
+              modalRef.current.focus();
+            }
+          }, animationDuration);
+        } else if (!isOpen && isVisible) {
+          // Start closing animation
+          setIsAnimating(true);
+          
+          // Hide modal after animation
+          setTimeout(() => {
+            setIsAnimating(false);
+            setIsVisible(false);
+            
+            // Restore focus to previously focused element
+            if (previousActiveElement.current) {
+              previousActiveElement.current.focus();
+            }
+          }, animationDuration);
+        }
+      }, [isOpen, animationDuration]);
+      
+      // Handle ESC key press
+      React.useEffect(() => {
+        const handleKeyDown = (e) => {
+          if (closeOnEscape && e.key === 'Escape' && isVisible && !isAnimating) {
+            onClose();
+          }
+        };
+        
+        if (isVisible) {
+          document.addEventListener('keydown', handleKeyDown);
+        }
+        
+        return () => {
+          document.removeEventListener('keydown', handleKeyDown);
+        };
+      }, [isVisible, isAnimating, closeOnEscape, onClose]);
+      
+      // Handle click outside modal
+      const handleBackdropClick = (e) => {
+        if (closeOnBackdropClick && e.target === e.currentTarget && !isAnimating) {
+          onClose();
+        }
+      };
+      
+      // Prevent tab from leaving the modal
+      const handleTabKey = (e) => {
+        if (e.key !== 'Tab' || !modalRef.current) return;
+        
+        const focusableElements = modalRef.current.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+        
+        if (e.shiftKey && document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      };
+      
+      // Add scroll lock to body when modal is open
+      React.useEffect(() => {
+        if (isVisible) {
+          const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+          document.body.style.overflow = 'hidden';
+          document.body.style.paddingRight = `${scrollbarWidth}px`;
+        } else {
+          document.body.style.overflow = '';
+          document.body.style.paddingRight = '';
+        }
+        
+        return () => {
+          document.body.style.overflow = '';
+          document.body.style.paddingRight = '';
+        };
+      }, [isVisible]);
+      
+      // If modal is not visible, don't render anything
+      if (!isVisible) {
+        return null;
+      }
+      
+      // Generate modal sizes
+      const sizeStyles = {
+        small: {
+          maxWidth: '400px',
+        },
+        medium: {
+          maxWidth: '600px',
+        },
+        large: {
+          maxWidth: '800px',
+        },
+        xlarge: {
+          maxWidth: '1000px',
+        },
+      };
+      
+      // Generate styles
+      const styles = {
+        backdrop: {
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: centered ? 'center' : 'flex-start',
+          justifyContent: 'center',
+          zIndex: 1000,
+          padding: centered ? '0px' : '48px 0',
+          overflow: 'auto',
+          opacity: isAnimating && isOpen ? 0 : 1,
+          transition: `opacity ${animationDuration}ms ease-in-out`,
+        },
+        modalContainer: {
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundColor: isDarkMode ? theme.colors.bg.card : '#ffffff',
+          borderRadius: theme.borderRadius.md,
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+          margin: centered ? 'auto' : '0 auto',
+          width: fullWidth ? '100%' : 'auto',
+          ...(fullWidth ? {} : sizeStyles[size]),
+          maxHeight: centered ? 'calc(100vh - 48px)' : 'calc(100vh - 96px)',
+          transform: isAnimating ? 
+            (isOpen ? 'translateY(20px) scale(0.95)' : 'translateY(0) scale(1)') : 
+            'translateY(0) scale(1)',
+          opacity: isAnimating && isOpen ? 0 : 1,
+          transition: `transform ${animationDuration}ms ease-out, opacity ${animationDuration}ms ease-in-out`,
+          ...style,
+        },
+        header: {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '16px 24px',
+          borderBottom: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
+          position: 'relative',
+        },
+        title: {
+          margin: 0,
+          fontSize: '1.25rem',
+          fontWeight: 600,
+          color: isDarkMode ? theme.colors.text.primary : theme.colors.text.primary,
+        },
+        closeButton: {
+          padding: '8px',
+          background: 'transparent',
+          border: 'none',
+          borderRadius: '50%',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+          transition: 'background-color 0.2s ease',
+        },
+        content: {
+          padding: '24px',
+          overflow: 'auto',
+          flexGrow: 1,
+        },
+        footer: {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          padding: '16px 24px',
+          borderTop: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
+          gap: '8px',
+        },
+      };
+      
+      // Generate aria attributes
+      const ariaProps = {
+        role: 'dialog',
+        'aria-modal': true,
+        ...(ariaLabelledBy ? { 'aria-labelledby': ariaLabelledBy } : {}),
+        ...(ariaDescribedBy ? { 'aria-describedby': ariaDescribedBy } : {}),
+        ...(title && !ariaLabelledBy ? { 'aria-label': title } : {}),
+      };
+      
+      return (
+        <div 
+          className={`modal-backdrop ${backdropClassName}`}
+          style={styles.backdrop}
+          onClick={handleBackdropClick}
+          data-testid="modal-backdrop"
+        >
+          <div
+            ref={modalRef}
+            className={`modal-container ${className}`}
+            style={styles.modalContainer}
+            tabIndex={-1}
+            onKeyDown={handleTabKey}
+            id={id}
+            {...ariaProps}
+            {...rest}
+            data-testid="modal"
+          >
+            {/* Modal Header */}
+            {(title || showCloseButton) && (
+              <div className={`modal-header ${headerClassName}`} style={styles.header}>
+                {title && (
+                  <h2
+                    className="modal-title"
+                    style={styles.title}
+                    id={ariaLabelledBy}
+                  >
+                    {title}
+                  </h2>
+                )}
+                
+                {showCloseButton && (
+                  <button
+                    type="button"
+                    className={`modal-close-button ${closeButtonClassName}`}
+                    style={styles.closeButton}
+                    onClick={onClose}
+                    aria-label="Close"
+                    data-testid="modal-close-button"
+                  >
+                    <svg 
+                      width="18" 
+                      height="18" 
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                )}
+              </div>
+            )}
+            
+            {/* Modal Content */}
+            <div 
+              className={`modal-content ${contentClassName}`} 
+              style={styles.content}
+              id={ariaDescribedBy}
+            >
+              {children}
+            </div>
+            
+            {/* Modal Footer */}
+            {footer && (
+              <div className={`modal-footer ${footerClassName}`} style={styles.footer}>
+                {footer}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // Modal Demo
+    function ModalDemo() {
+      // State for basic modal
+      const [isBasicModalOpen, setIsBasicModalOpen] = React.useState(false);
+      
+      // State for confirmation modal
+      const [isConfirmationModalOpen, setIsConfirmationModalOpen] = React.useState(false);
+      const [confirmationResult, setConfirmationResult] = React.useState(null);
+      
+      // State for different sizes
+      const [sizeModalOpen, setSizeModalOpen] = React.useState(false);
+      const [selectedSize, setSelectedSize] = React.useState('medium');
+      
+      // State for centered modal
+      const [isCenteredModalOpen, setIsCenteredModalOpen] = React.useState(false);
+      
+      // State for full width modal
+      const [isFullWidthModalOpen, setIsFullWidthModalOpen] = React.useState(false);
+      
+      // State for custom footer modal
+      const [isCustomFooterModalOpen, setIsCustomFooterModalOpen] = React.useState(false);
+      
+      // State for nested modal
+      const [isOuterModalOpen, setIsOuterModalOpen] = React.useState(false);
+      const [isInnerModalOpen, setIsInnerModalOpen] = React.useState(false);
+      
+      // State for form modal
+      const [isFormModalOpen, setIsFormModalOpen] = React.useState(false);
+      const [formData, setFormData] = React.useState({
+        name: '',
+        email: '',
+        message: ''
+      });
+      
+      // Handle form input changes
+      const handleFormChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+      };
+      
+      // Handle form submission
+      const handleFormSubmit = (e) => {
+        e.preventDefault();
+        document.getElementById('formResult').textContent = `Form submitted with:\nName: ${formData.name}\nEmail: ${formData.email}\nMessage: ${formData.message}`;
+        document.getElementById('formResultBox').style.display = 'block';
+        setIsFormModalOpen(false);
+      };
+
+      // Show confirmation result
+      const showConfirmationResult = (result) => {
+        setConfirmationResult(result);
+        const resultBox = document.getElementById('confirmationResult');
+        resultBox.textContent = `User ${result === 'confirmed' ? 'confirmed' : 'cancelled'} the action.`;
+        resultBox.className = `result-box result-${result}`;
+        resultBox.style.display = 'block';
+      };
+      
+      return (
+        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '20px' }}>
+          <h1>Modal Component Demo</h1>
+          <p>A feature-rich modal dialog component with backdrop, animations, and accessibility features.</p>
+          
+          {/* Basic Modal Demo */}
+          <section>
+            <h2>Basic Modal</h2>
+            <p>Simple modal with title and content.</p>
+            
+            <button onClick={() => setIsBasicModalOpen(true)}>
+              Open Basic Modal
+            </button>
+            
+            <Modal 
+              isOpen={isBasicModalOpen}
+              onClose={() => setIsBasicModalOpen(false)}
+              title="Basic Modal"
+            >
+              <p>This is a basic modal with a title and content.</p>
+              <p>Click the X button or click outside the modal to close it.</p>
+            </Modal>
+          </section>
+          
+          {/* Confirmation Modal Demo */}
+          <section>
+            <h2>Confirmation Modal</h2>
+            <p>Modal with custom footer containing action buttons.</p>
+            
+            <button onClick={() => setIsConfirmationModalOpen(true)}>
+              Open Confirmation Modal
+            </button>
+            
+            <div id="confirmationResult" className="result-box"></div>
+            
+            <Modal 
+              isOpen={isConfirmationModalOpen}
+              onClose={() => setIsConfirmationModalOpen(false)}
+              title="Confirm Action"
+              footer={
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button 
+                    style={{ backgroundColor: '#6c757d' }}
+                    onClick={() => {
+                      showConfirmationResult('cancelled');
+                      setIsConfirmationModalOpen(false);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    onClick={() => {
+                      showConfirmationResult('confirmed');
+                      setIsConfirmationModalOpen(false);
+                    }}
+                  >
+                    Confirm
+                  </button>
+                </div>
+              }
+            >
+              <p>Are you sure you want to perform this action?</p>
+              <p>This action cannot be undone.</p>
+            </Modal>
+          </section>
+          
+          {/* Different Sizes Demo */}
+          <section>
+            <h2>Different Sizes</h2>
+            <p>Modals come in different sizes to suit your content needs.</p>
+            
+            <div className="button-group">
+              {['small', 'medium', 'large', 'xlarge'].map((size) => (
+                <button 
+                  key={size}
+                  onClick={() => {
+                    setSelectedSize(size);
+                    setSizeModalOpen(true);
+                  }}
+                >
+                  {size.charAt(0).toUpperCase() + size.slice(1)} Modal
+                </button>
+              ))}
+            </div>
+            
+            <Modal 
+              isOpen={sizeModalOpen}
+              onClose={() => setSizeModalOpen(false)}
+              title={`${selectedSize.charAt(0).toUpperCase() + selectedSize.slice(1)} Modal`}
+              size={selectedSize}
+            >
+              <p>This is a modal with size <strong>{selectedSize}</strong>.</p>
+              <div className="demo-box">
+                Content Area
+              </div>
+            </Modal>
+          </section>
+          
+          {/* Centered Modal Demo */}
+          <section>
+            <h2>Centered Modal</h2>
+            <p>Modal vertically centered in the viewport.</p>
+            
+            <button onClick={() => setIsCenteredModalOpen(true)}>
+              Open Centered Modal
+            </button>
+            
+            <Modal 
+              isOpen={isCenteredModalOpen}
+              onClose={() => setIsCenteredModalOpen(false)}
+              title="Centered Modal"
+              centered={true}
+            >
+              <p>This modal is vertically centered in the viewport.</p>
+              <p>It's useful for important alerts or confirmations.</p>
+            </Modal>
+          </section>
+          
+          {/* Full Width Modal Demo */}
+          <section>
+            <h2>Full Width Modal</h2>
+            <p>Modal that takes up the full width of its container.</p>
+            
+            <button onClick={() => setIsFullWidthModalOpen(true)}>
+              Open Full Width Modal
+            </button>
+            
+            <Modal 
+              isOpen={isFullWidthModalOpen}
+              onClose={() => setIsFullWidthModalOpen(false)}
+              title="Full Width Modal"
+              fullWidth={true}
+            >
+              <p>This modal takes up the full width of its container.</p>
+              <p>It's useful for displaying large amounts of content or complex forms.</p>
+              <div className="demo-box demo-box-large">
+                Wide Content Area
+              </div>
+            </Modal>
+          </section>
+          
+          {/* Custom Footer Modal Demo */}
+          <section>
+            <h2>Custom Footer</h2>
+            <p>Modal with custom footer that includes multiple elements.</p>
+            
+            <button onClick={() => setIsCustomFooterModalOpen(true)}>
+              Open Modal with Custom Footer
+            </button>
+            
+            <Modal 
+              isOpen={isCustomFooterModalOpen}
+              onClose={() => setIsCustomFooterModalOpen(false)}
+              title="Custom Footer Modal"
+              footer={
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                  <div>
+                    <button 
+                      style={{ 
+                        padding: '6px 12px', 
+                        backgroundColor: 'transparent', 
+                        border: 'none',
+                        color: '#6200ea',
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => alert('Help clicked')}
+                    >
+                      Need Help?
+                    </button>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button 
+                      style={{ backgroundColor: '#6c757d' }}
+                      onClick={() => setIsCustomFooterModalOpen(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      onClick={() => {
+                        alert('Action completed');
+                        setIsCustomFooterModalOpen(false);
+                      }}
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              }
+            >
+              <p>This modal has a custom footer with multiple elements.</p>
+              <p>You can add any content to the footer, like help links or multiple buttons.</p>
+            </Modal>
+          </section>
+          
+          {/* Nested Modal Demo */}
+          <section>
+            <h2>Nested Modals</h2>
+            <p>Opening one modal from within another modal.</p>
+            
+            <button onClick={() => setIsOuterModalOpen(true)}>
+              Open Nested Modal Example
+            </button>
+            
+            <Modal 
+              isOpen={isOuterModalOpen}
+              onClose={() => setIsOuterModalOpen(false)}
+              title="Outer Modal"
+            >
+              <p>This is the outer modal. You can open another modal from here.</p>
+              <button onClick={() => setIsInnerModalOpen(true)}>
+                Open Inner Modal
+              </button>
+              
+              <Modal 
+                isOpen={isInnerModalOpen}
+                onClose={() => setIsInnerModalOpen(false)}
+                title="Inner Modal"
+                centered={true}
+                size="small"
+              >
+                <p>This is the inner modal.</p>
+                <p>You can stack modals for complex workflows.</p>
+                <button onClick={() => setIsInnerModalOpen(false)}>
+                  Close Inner Modal
+                </button>
+              </Modal>
+            </Modal>
+          </section>
+          
+          {/* Form Modal Demo */}
+          <section>
+            <h2>Form in Modal</h2>
+            <p>Modal containing a form with submit button in the footer.</p>
+            
+            <button onClick={() => setIsFormModalOpen(true)}>
+              Open Form Modal
+            </button>
+            
+            <div id="formResultBox" className="result-box result-confirmed" style={{ display: 'none' }}>
+              <pre id="formResult"></pre>
+            </div>
+            
+            <Modal 
+              isOpen={isFormModalOpen}
+              onClose={() => setIsFormModalOpen(false)}
+              title="Contact Form"
+              footer={
+                <div>
+                  <button 
+                    style={{ backgroundColor: '#6c757d', marginRight: '8px' }}
+                    onClick={() => setIsFormModalOpen(false)}
+                    type="button"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    form="contactForm"
+                    type="submit"
+                  >
+                    Submit
+                  </button>
+                </div>
+              }
+            >
+              <form id="contactForm" onSubmit={handleFormSubmit}>
+                <div className="form-field">
+                  <label className="form-label">
+                    Name
+                  </label>
+                  <input 
+                    type="text" 
+                    name="name" 
+                    value={formData.name} 
+                    onChange={handleFormChange} 
+                    className="form-input"
+                    required
+                  />
+                </div>
+                
+                <div className="form-field">
+                  <label className="form-label">
+                    Email
+                  </label>
+                  <input 
+                    type="email" 
+                    name="email" 
+                    value={formData.email} 
+                    onChange={handleFormChange} 
+                    className="form-input"
+                    required
+                  />
+                </div>
+                
+                <div className="form-field">
+                  <label className="form-label">
+                    Message
+                  </label>
+                  <textarea 
+                    name="message" 
+                    value={formData.message} 
+                    onChange={handleFormChange} 
+                    className="form-input form-textarea"
+                    required
+                  />
+                </div>
+              </form>
+            </Modal>
+          </section>
+        </div>
+      );
+    }
+
+    // Main App
+    function App() {
+      return (
+        <ThemeProvider>
+          <ModalDemo />
+        </ThemeProvider>
+      );
+    }
+
+    // Render the app
+    ReactDOM.render(<App />, document.getElementById('app'));
+  </script>
+</body>
+</html>
