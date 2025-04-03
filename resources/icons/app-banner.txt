@@ -1,0 +1,8 @@
+# Financial Pre-Accounting Agent
+
+The app-banner.png would display:
+- Deep navy/purple background gradient
+- Primary logo in purple (#9747FF) with subtle glow effect
+- Modern glass card effect containing the app name in white text
+- Subtle accent graphics in the corners (light opacity)
+- Overall design following the Purple Theme design system

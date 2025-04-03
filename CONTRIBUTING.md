@@ -1,131 +1,155 @@
 # Contributing to Financial Pre-Accounting Agent
 
-Thank you for your interest in contributing to the Financial Pre-Accounting Agent! This document provides guidelines and instructions for contributing to this open-source project.
+Thank you for your interest in contributing to the Financial Pre-Accounting Agent! This document provides guidelines and instructions for contributing to this project.
 
 ## Table of Contents
 
 - [Code of Conduct](#code-of-conduct)
+- [Beta Development Process](#beta-development-process)
 - [Getting Started](#getting-started)
 - [Development Workflow](#development-workflow)
-- [Versioning Guidelines](#versioning-guidelines)
+- [Branching Strategy](#branching-strategy)
 - [Pull Request Process](#pull-request-process)
 - [Coding Standards](#coding-standards)
-- [Tax Rules Contributions](#tax-rules-contributions)
-- [Reporting Bugs](#reporting-bugs)
-- [Feature Requests](#feature-requests)
-- [Community](#community)
+- [Commit Message Guidelines](#commit-message-guidelines)
+- [Testing Guidelines](#testing-guidelines)
+- [Documentation](#documentation)
 
 ## Code of Conduct
 
-This project adheres to a Code of Conduct that sets expectations for participation in our community. By participating, you are expected to uphold this code. Please report unacceptable behavior.
+This project and everyone participating in it is governed by our Code of Conduct. By participating, you are expected to uphold this code. Please report unacceptable behavior to the project maintainers.
+
+## Beta Development Process
+
+We are currently transitioning from alpha (3.4.0-alpha) to beta (3.4.0-beta). The beta development is organized into four phases:
+
+1. **Foundation Completion**: Service architecture migration and core form components
+2. **Advanced UI Development**: Remaining form components and critical UI components
+3. **Layout and Secondary Features**: Layout framework and service enhancements
+4. **Testing and Polishing**: Comprehensive testing and final components
+
+Please review the detailed plan in `docs/beta-transition-plan.md` before contributing.
 
 ## Getting Started
 
-To get started with development:
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/Aladin147/financial-pre-accounting-agent-beta.git
+   cd financial-pre-accounting-agent-beta
+   ```
 
-1. Fork the repository
-2. Clone your fork locally
-3. Install dependencies with `npm install`
-4. Create a new branch for your work
-5. Run the application locally with `npm run dev`
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Set up the beta development branch**:
+   ```bash
+   scripts/setup-beta-branch.bat
+   ```
 
 ## Development Workflow
 
-1. Choose an issue to work on or create a new one for discussion
-2. Create a branch with a descriptive name (e.g., `feature/add-report-export`, `fix/tax-calculation-error`)
-3. Make your changes, following our coding standards
-4. Write or update tests as necessary
-5. Update documentation to reflect your changes
-6. Commit your changes with clear, descriptive commit messages
-7. Push your branch and submit a pull request
+1. Choose a task from the beta roadmap in `CHANGELOG.md` or `docs/beta-roadmap.md`
+2. Create a feature branch from `beta-dev`
+3. Implement your changes with proper tests and documentation
+4. Submit a pull request against the `beta-dev` branch
 
-## Versioning Guidelines
+## Branching Strategy
 
-We follow [Semantic Versioning](https://semver.org/) with our custom labels:
+- `main` - Stable production code (current alpha release)
+- `beta-dev` - Development branch for beta work
+- Feature branches - Created from `beta-dev` for individual components or features
 
+For feature development:
+```bash
+git checkout beta-dev
+git pull
+git checkout -b feature/component-name
 ```
-MAJOR.MINOR.PATCH-LABEL
-```
-
-- **MAJOR**: Increments for incompatible API changes
-- **MINOR**: Increments for backward-compatible new features
-- **PATCH**: Increments for backward-compatible bug fixes
-- **LABEL**: Additional context (mvp, alpha, beta, rc)
-
-Our development roadmap follows this pattern:
-- v1.0.0-mvp: Initial MVP
-- v2.0.0-beta: Enhanced features
-- v3.0.0-beta: Full-featured version
-- v4.0.0: Production release
 
 ## Pull Request Process
 
-1. Ensure your code follows our coding standards
-2. Update documentation with details of changes
-3. Add tests that verify your changes
-4. Ensure all tests pass locally before submitting
-5. Update the README.md with details of changes if needed
-6. The PR should focus on a single feature or fix
-7. The PR will be merged once it receives approval from maintainers
+1. Create a pull request against the `beta-dev` branch
+2. Use the PR template provided
+3. Ensure your PR includes:
+   - Component implementation with proper theming
+   - Comprehensive tests (≥90% coverage for critical components)
+   - Documentation updates
+   - Demo examples
+4. Request review from at least one maintainer
+5. Address review feedback
 
 ## Coding Standards
 
-- Use consistent indentation (2 spaces)
-- Follow the existing code style
+### General Guidelines
+
 - Use meaningful variable and function names
-- Write comments for complex logic
 - Keep functions small and focused
-- Include JSDoc comments for public APIs
-- Avoid commented-out code
-- Use ES6 features appropriately
+- Add comments for complex logic
+- Follow the DRY (Don't Repeat Yourself) principle
 
-## Tax Rules Contributions
+### JavaScript/React Standards
 
-Because this application deals with Moroccan tax regulations, contributions to tax rules require:
+- Use ES6+ features
+- Use functional components with hooks
+- Implement proper prop validation
+- Follow React best practices for performance
 
-1. Clear reference to the specific Finance Law article
-2. Documentation of the rule's implementation details
-3. Test cases demonstrating the rule's application
-4. Peer review by maintainers or tax experts
+### CSS/Styling Standards
 
-### Tax Rule Structure
+- Use the Purple Theme system for all UI components
+- Follow the design tokens defined in `src/renderer/styles/tokens.js`
+- Implement responsive design principles
+- Ensure accessibility compliance
 
-When updating tax rules, maintain the structure in `resources/tax-rules/finance-law-YYYY.json`:
+## Commit Message Guidelines
+
+We follow semantic commit messages:
 
 ```
-{
-  "version": "x.y.z",
-  "description": "Brief description",
-  "effectiveDate": "YYYY-MM-DD",
-  "expiryDate": "YYYY-MM-DD",
-  ... rule details ...
-}
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
 ```
 
-## Reporting Bugs
+Types:
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, etc.)
+- `refactor`: Code changes that neither fix bugs nor add features
+- `perf`: Performance improvements
+- `test`: Adding or updating tests
+- `chore`: Changes to the build process or auxiliary tools
 
-When reporting bugs:
+Example:
+```
+feat(checkbox): implement Checkbox and CheckboxGroup components
 
-1. Use the GitHub issue tracker
-2. Describe the bug in detail
-3. Include steps to reproduce
-4. Add information about your environment (OS, Node version, etc.)
-5. Include screenshots if applicable
+- Add Checkbox component with indeterminate state support
+- Create CheckboxGroup for managing multiple selections
+- Implement proper keyboard navigation and accessibility
 
-## Feature Requests
+Closes #42
+```
 
-For feature requests:
+## Testing Guidelines
 
-1. First check existing issues to avoid duplicates
-2. Clearly describe the feature and its benefits
-3. Provide examples of how the feature would work
-4. Consider implementation complexity
-5. Indicate if you're willing to implement it yourself
+- All components must have unit tests
+- Critical components must have ≥90% test coverage
+- Include visual tests for UI components
+- Add accessibility tests where applicable
+- Test all state changes and event handlers
 
-## Community
+## Documentation
 
-- Join our discussions in the GitHub issues
-- Follow the project's progress through releases
-- Share your implementations and extensions with the community
+- Add JSDoc comments to all public functions and components
+- Update relevant documentation files in `/docs`
+- Include usage examples for components
+- Document any breaking changes
+- Create or update demos for visual components
 
-Thank you for contributing to making financial accounting more accessible for Moroccan businesses!
+Thank you for contributing to the Financial Pre-Accounting Agent!
