@@ -1,0 +1,3 @@
+@echo off
+echo Starting Table Component Demo...
+start table-demo.html
