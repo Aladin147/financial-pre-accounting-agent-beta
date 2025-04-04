@@ -1,0 +1,3 @@
+@echo off
+echo Starting Modal Component Demo...
+start modal-demo.html
